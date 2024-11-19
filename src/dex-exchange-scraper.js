@@ -59,8 +59,21 @@ async function scrapeDexScreener() {
         // Initial delay to ensure WebSocket connection
         await new Promise(resolve => setTimeout(resolve, 2000));
 
+        // Check for verification page
+        const verifyText = await page.evaluate(() => document.body.innerText);
+        if (verifyText.includes('Verify you are human by completing the action below')) {
+            console.log('Detected verification page, waiting for manual verification...');
+            // Wait for verification to complete by checking when the text is no longer present
+            await page.waitForFunction(
+                () => !document.body.innerText.includes('Verify you are human by completing the action below'),
+                { timeout: 300000 } // 5 minute timeout
+            );
+            console.log('Verification completed, continuing...');
+        }
+
         while (true) {
             const pairs = await page.evaluate(() => {
+
                 const pairElements = document.querySelectorAll('.ds-dex-table-row.ds-dex-table-row-new');
                 return Array.from(pairElements).map(row => {
                     // Get token address from href

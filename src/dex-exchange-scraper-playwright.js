@@ -2,11 +2,19 @@ import { chromium } from 'playwright';
 import os from 'os';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import UserAgent from 'user-agents';
+import ProxyChain from 'proxy-chain';
 
 // Initialize dotenv
 dotenv.config();
 
 async function main() {
+    // Setup proxy if provided
+    let proxyServer;
+    if (process.env.PROXY_URL) {
+        proxyServer = await ProxyChain.anonymizeProxy(process.env.PROXY_URL);
+    }
+
     const browser = await chromium.launch({
         headless: false,
         args: [
@@ -14,16 +22,102 @@ async function main() {
             '--disable-dev-shm-usage',
             '--disable-setuid-sandbox',
             '--no-sandbox',
+            '--disable-blink-features=AutomationControlled',
+            '--disable-features=IsolateOrigins,site-per-process',
+            '--disable-site-isolation-trials',
+            '--disable-web-security',
+            '--disable-features=ScriptStreaming',
+            '--no-first-run',
+            '--no-default-browser-check',
+            '--no-zygote',
+            '--disable-accelerated-2d-canvas',
+            '--disable-background-timer-throttling',
+            '--disable-breakpad',
+            '--disable-component-extensions-with-background-pages',
+            '--disable-extensions',
+            '--disable-features=TranslateUI',
+            '--disable-ipc-flooding-protection',
+            '--disable-renderer-backgrounding',
+            '--enable-features=NetworkService,NetworkServiceInProcess',
+            '--force-color-profile=srgb',
+            '--metrics-recording-only',
+            ...(proxyServer ? [`--proxy-server=${proxyServer}`] : [])
         ]
     });
 
     try {
+        const userAgent = new UserAgent({ deviceCategory: 'desktop' }).toString();
         const context = await browser.newContext({
-            viewport: { width: 1024, height: 768 },
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            viewport: { width: 1920, height: 1080 },
+            userAgent,
+            permissions: ['geolocation'],
+            geolocation: { latitude: 40.712776, longitude: -74.005974 },
+            locale: 'en-US',
+            timezoneId: 'America/New_York',
+            deviceScaleFactor: 1,
+            hasTouch: false,
+            javaScriptEnabled: true,
+            bypassCSP: true,
+            ignoreHTTPSErrors: true,
+            extraHTTPHeaders: {
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+                'Sec-Ch-Ua-Mobile': '?0',
+                'Sec-Ch-Ua-Platform': '"Windows"',
+                'Upgrade-Insecure-Requests': '1',
+                'User-Agent': userAgent,
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Sec-Fetch-User': '?1',
+                'Cache-Control': 'max-age=0'
+            }
+        });
+
+        // Enhanced stealth scripts
+        await context.addInitScript(() => {
+            const originalQuery = window.navigator.permissions.query;
+            window.navigator.permissions.query = (parameters) => (
+                parameters.name === 'notifications' ?
+                    Promise.resolve({ state: Notification.permission }) :
+                    originalQuery(parameters)
+            );
+
+            // Overwrite navigator properties
+            Object.defineProperties(navigator, {
+                webdriver: { get: () => undefined },
+                plugins: { get: () => [
+                    { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer' },
+                    { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai' },
+                    { name: 'Native Client', filename: 'internal-nacl-plugin' }
+                ]},
+                languages: { get: () => ['en-US', 'en'] },
+                platform: { get: () => 'Win32' },
+                hardwareConcurrency: { get: () => 8 },
+                deviceMemory: { get: () => 8 },
+                maxTouchPoints: { get: () => 0 },
+            });
+
+            // Mock WebGL
+            const getParameter = WebGLRenderingContext.prototype.getParameter;
+            WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                if (parameter === 37445) return 'Intel Inc.';
+                if (parameter === 37446) return 'Intel(R) Iris(TM) Graphics 6100';
+                return getParameter.apply(this, arguments);
+            };
+
+            // Prevent detection via error stack trace
+            Error.prototype.toString = function() {
+                return `${this.name}: ${this.message}`;
+            };
         });
 
         const page = await context.newPage();
+        // await setupPageHooks(page);
+
+        await page.mouse.move(Math.random() * 500, Math.random() * 500);
 
         while (true) {
             try {
