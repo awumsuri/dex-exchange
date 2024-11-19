@@ -235,7 +235,8 @@ async function savePairToFile(pair) {
 process.on('SIGINT', async () => {
     console.log('Closing browser and exiting...');
     await browser.close();
-   scrapeDexScreener()
+   ///scrapeDexScreener()
+   process.exit(0)
 });
 
 // Execute the scraper
