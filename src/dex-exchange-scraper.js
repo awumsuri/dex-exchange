@@ -29,7 +29,7 @@ const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome
 
 const browser = await puppeteer.launch({
     headless: false,  // Use new headless mode
-    defaultViewport: { width: 1920, height: 1080 },
+    // defaultViewport: { width: 1920, height: 1080 },
     userDataDir: cacheLocation,
     executablePath: executablePath,
     args: [
