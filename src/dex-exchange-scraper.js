@@ -84,22 +84,37 @@ async function scrapeDexScreener() {
                 // pair.buys > pair.sells &&
                 pair.network === 'solana' // more buys than sells
             );
-            
+
             if (highMakerPairs.length > 0) {
                 console.log('\nFiltered pairs meeting criteria:');
-                highMakerPairs.forEach(async pair => {
-                    if (!await isTokenAlreadySaved(pair.tokenAddress)) {                       
-                        await sendToTelegram(pair)
-                        console.log(JSON.stringify(pair, null, 2));                        
-                    } else {
-                        console.log(`Token ${pair.token} already saved`);
-                    }
-                   
-                });
+                // Send only the first pair that meets the criteria
+                const firstPair = highMakerPairs[0];
+                if (!await isTokenAlreadySaved(firstPair.tokenAddress)) {
+                    await sendToTelegram(firstPair);
+                    console.log(JSON.stringify(firstPair, null, 2));
+                } else {
+                    console.log(`Token ${firstPair.token} already saved`);
+                }
                 console.log('------------------------\n');
             } else {
-                console.log(`No New Found Tokens == ${new Date()}`)
+                console.log(`No New Found Tokens == ${new Date()}`);
             }
+            
+            // if (highMakerPairs.length > 0) {
+            //     console.log('\nFiltered pairs meeting criteria:');
+            //     highMakerPairs.forEach(async pair => {
+            //         if (!await isTokenAlreadySaved(pair.tokenAddress)) {                       
+            //             await sendToTelegram(pair)
+            //             console.log(JSON.stringify(pair, null, 2));                        
+            //         } else {
+            //             console.log(`Token ${pair.token} already saved`);
+            //         }
+                   
+            //     });
+            //     console.log('------------------------\n');
+            // } else {
+            //     console.log(`No New Found Tokens == ${new Date()}`)
+            // }
             // Wait 5 seconds before next evaluation
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
