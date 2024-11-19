@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2024-11-19T20:19:22.093Z",
+    "network": "solana",
+    "tokenAddress": "maakp9ppwwf676hszvottnu6bcm66tdovj9qfn53pvj",
+    "token": "#4\nTOGO\n/\nSOL\nTOGO\n50",
+    "price": 0.0005652,
+    "pairAge": "32m",
+    "buys": 11377,
+    "sells": 905,
+    "volume": 630,
+    "makers": 11082,
+    "priceChange": {
+      "m5": 32.12,
+      "h1": 484,
+      "h6": 484,
+      "h24": 484
+    },
+    "liquidity": 96,
+    "marketCap": 565
+  },
+  {
+    "timestamp": "2024-11-19T20:20:23.306Z",
+    "network": "solana",
+    "tokenAddress": "ayhqnhfjenymakse3ufnmgrykj1ijdbho7tpwzhx46ds",
+    "token": "#5\nCOKE\n/\nSOL\nCoke cat\n500",
+    "price": 0.0002072,
+    "pairAge": "22m",
+    "buys": 6485,
+    "sells": 2883,
+    "volume": 672,
+    "makers": 8037,
+    "priceChange": {
+      "m5": 20.94,
+      "h1": 87.2,
+      "h6": 87.2,
+      "h24": 87.2
+    },
+    "liquidity": 59,
+    "marketCap": 207
+  }
+]
