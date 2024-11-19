@@ -12,7 +12,7 @@ const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-
 const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome-stable'       
 
 const browser = await puppeteer.launch({
-    headless: false,  // Use new headless mode
+    headless: 'new',  // Use new headless mode
     defaultViewport: { width: 1920, height: 1080 },
     userDataDir: cacheLocation,
     // executablePath: executablePath,
