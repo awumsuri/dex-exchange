@@ -10,10 +10,11 @@ import Xvfb from 'xvfb';
 let xvfb;
 if (os.platform() === 'linux') {
     console.log('Starting Xvfb...')
-    xvfb = new Xvfb({
-        silent: true,
-        xvfb_args: ['-screen', '0', '800x600x16', '-ac']
-    });
+    // xvfb = new Xvfb({
+    //     silent: true,
+    //     xvfb_args: ['-screen', '0', '800x600x16', '-ac']
+    // });
+    xvfb = new Xvfb()
     xvfb.startSync();
     process.env.DISPLAY = ':99';
 }
