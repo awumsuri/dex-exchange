@@ -3,6 +3,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import os from 'os';
 import dotenv from 'dotenv';
 import fs from 'fs';
+import { spawn } from 'child_process';
 
 // Initialize dotenv at the top of your file
 dotenv.config();
@@ -11,11 +12,18 @@ puppeteer.use(StealthPlugin());
 const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : '/root/chrome-cache/'
 const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome-stable'       
 
+// Add Xvfb initialization before puppeteer launch
+let xvfbProcess;
+if (os.platform() === 'linux') {
+    xvfbProcess = spawn('Xvfb', [':99', '-screen', '0', '1920x1080x24', '-ac']);
+    process.env.DISPLAY = ':99';
+}
+
 const browser = await puppeteer.launch({
-    headless: 'new',  // Use new headless mode
+    headless: false,  // Use new headless mode
     defaultViewport: { width: 1920, height: 1080 },
     userDataDir: cacheLocation,
-    // executablePath: executablePath,
+    executablePath: executablePath,
     args: [
         '--no-sandbox',                
         '--disable-setuid-sandbox',
@@ -23,7 +31,7 @@ const browser = await puppeteer.launch({
         '--window-position=0,0',
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
-        // '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.110 Safari/537.36'
+        ...(os.platform() === 'linux' ? ['--display=:99'] : []),
     ],
 });
 
@@ -250,8 +258,10 @@ async function savePairToFile(pair) {
 process.on('SIGINT', async () => {
     console.log('Closing browser and exiting...');
     await browser.close();
-   ///scrapeDexScreener()
-   process.exit(0)
+    if (xvfbProcess) {
+        xvfbProcess.kill();
+    }
+    process.exit(0)
 });
 
 // Execute the scraper
