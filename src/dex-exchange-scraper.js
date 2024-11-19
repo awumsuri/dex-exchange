@@ -66,7 +66,7 @@ async function scrapeDexScreener() {
             // Wait for verification to complete by checking when the text is no longer present
             await page.waitForFunction(
                 () => !document.body.innerText.includes('Verify you are human by completing the action below'),
-                { timeout: 300000 } // 5 minute timeout
+                { timeout: 10000 } // 5 minute timeout
             );
             console.log('Verification completed, continuing...');
         }
