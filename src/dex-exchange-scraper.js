@@ -4,6 +4,20 @@ import os from 'os';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import Xvfb from 'xvfb';
+
+// Replace the Xvfb initialization block
+let xvfb;
+if (os.platform() === 'linux') {
+    console.log('Starting Xvfb...')
+    xvfb = new Xvfb({
+        silent: true,
+        xvfb_args: ['-screen', '0', '800x600x16', '-ac']
+    });
+    xvfb.startSync();
+    process.env.DISPLAY = ':99';
+}
+
 
 // Initialize dotenv at the top of your file
 dotenv.config();
@@ -11,13 +25,6 @@ dotenv.config();
 puppeteer.use(StealthPlugin());
 const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : '/root/chrome-cache/'
 const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome-stable'       
-
-// Add Xvfb initialization before puppeteer launch
-let xvfbProcess;
-if (os.platform() === 'linux') {
-    xvfbProcess = spawn('Xvfb', [':99', '-screen', '0', '1920x1080x24', '-ac']);
-    process.env.DISPLAY = ':99';
-}
 
 const browser = await puppeteer.launch({
     headless: false,  // Use new headless mode
@@ -31,7 +38,7 @@ const browser = await puppeteer.launch({
         '--window-position=0,0',
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
-        ...(os.platform() === 'linux' ? ['--display=:99'] : []),
+        // ...(os.platform() === 'linux' ? ['--display=:99'] : []),
     ],
 });
 
@@ -258,8 +265,8 @@ async function savePairToFile(pair) {
 process.on('SIGINT', async () => {
     console.log('Closing browser and exiting...');
     await browser.close();
-    if (xvfbProcess) {
-        xvfbProcess.kill();
+    if (xvfb) {
+        xvfb.kill();
     }
     process.exit(0)
 });
