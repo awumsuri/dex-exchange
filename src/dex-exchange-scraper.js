@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import { spawn } from 'child_process';
 import Xvfb from 'xvfb';
+import path from 'path';
 
 // Modify the Xvfb initialization block
 let xvfb;
@@ -39,12 +40,11 @@ stealthPlugin.enabledEvasions.delete('iframe.contentWindow')
 puppeteer.use(stealthPlugin);
 
 const browser = await puppeteer.launch({
-    headless: false,  // Use new headless mode
-    // defaultViewport: { width: 1920, height: 1080 },
+    headless: false,
     userDataDir: cacheLocation,
     executablePath: executablePath,
     args: [
-        '--no-sandbox',                
+        '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-infobars',
         '--window-position=0,0',
@@ -56,10 +56,62 @@ const browser = await puppeteer.launch({
         '--disable-features=BlockInsecurePrivateNetworkRequests',
         '--disable-web-security',
         '--disable-notifications',
+        '--disable-blink-features=AutomationControlled',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--disable-gpu',
+        '--lang=en-US,en;q=0.9',
+        '--disable-background-networking',
+        '--disable-default-apps',
+        '--disable-extensions',
+        '--disable-sync',
+        '--disable-translate',
+        '--hide-scrollbars',
+        '--metrics-recording-only',
+        '--mute-audio',
+        '--no-sandbox',
         ...(os.platform() === 'linux' ? ['--display=:99'] : []),
     ],
     ignoreDefaultArgs: ['--enable-automation'],
 });
+
+async function handleCloudflareChallenge(page) {
+    try {
+        // Wait for Turnstile iframe to load
+        await page.waitForSelector('iframe[src*="challenges.cloudflare.com"]', { timeout: 10000 });
+        
+        // Get all frames
+        const frames = page.frames();
+        const challengeFrame = frames.find(frame => frame.url().includes('challenges.cloudflare.com'));
+        
+        if (challengeFrame) {
+            // Wait for the challenge widget to be ready
+            await challengeFrame.waitForSelector('#cf-stage', { timeout: 10000 });
+            
+            // Try to find and interact with the challenge
+            const verifyButton = await challengeFrame.$('#cf-stage button');
+            if (verifyButton) {
+                await verifyButton.click();
+                console.log('Clicked verification button');
+            }
+            
+            // Wait for verification to complete
+            await page.waitForFunction(
+                () => !document.querySelector('div[class*="turnstile"]'),
+                { timeout: 30000 }
+            );
+        }
+        
+        // Wait for redirect after successful verification
+        await page.waitForNavigation({ timeout: 30000 });
+        
+    } catch (error) {
+        console.error('Error handling Cloudflare challenge:', error);
+        throw error;
+    }
+}
 
 
 async function scrapeDexScreener() {
@@ -69,10 +121,41 @@ async function scrapeDexScreener() {
 
         const page = await browser.newPage();
 
+         // Load saved cookies if they exist
+         await loadCookies(page);
+
+         // Set a more realistic user agent
+         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+
+         // Add extra headers
+        await page.setExtraHTTPHeaders({
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+        });        
+        
+
         // Initial page load
         await page.goto('https://dexscreener.com/?rankBy=pairAge&order=asc&minLiq=50000&min24HVol=80000&profile=1', {
             timeout: 60000
         });
+
+         // Check for and handle Cloudflare challenge
+         // If we encounter Cloudflare and manage to pass it, save the cookies
+         if (await page.$('div[class*="turnstile"]') !== null) {
+            await handleCloudflareChallenge(page);
+            // Save cookies after successful verification
+            await saveCookies(page);
+        }
 
         // Initial delay to ensure WebSocket connection
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -172,6 +255,8 @@ async function scrapeDexScreener() {
             //     console.log(`No New Found Tokens == ${new Date()}`)
             // }
             // Wait 5 seconds before next evaluation
+            await saveCookies(page);
+
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
 
@@ -322,3 +407,26 @@ scrapeDexScreener()
         console.error('Failed to scrape DEXScreener:', error);
         browser.close();
     });
+
+
+
+async function saveCookies(page, filePath = './cookies.json') {
+    try {
+        const cookies = await page.cookies();
+        await fs.promises.writeFile(filePath, JSON.stringify(cookies, null, 2));
+        console.log('Cookies saved successfully!');
+    } catch (error) {
+        console.error('Failed to save cookies:', error);
+    }
+}
+
+async function loadCookies(page, filePath = './cookies.json') {
+    try {
+        const cookiesString = await fs.promises.readFile(filePath);
+        const cookies = JSON.parse(cookiesString);
+        await page.setCookie(...cookies);
+        console.log('Cookies loaded successfully!');
+    } catch (error) {
+        console.error('Failed to load cookies:', error);
+    }
+}

@@ -1,3 +1,2 @@
-2024/11/20-20:21:46.421 f603 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Service Worker/Database/MANIFEST-000001
-2024/11/20-20:21:46.424 f603 Recovering log #3
-2024/11/20-20:21:46.424 f603 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Service Worker/Database/000003.log 
+2024/11/20-23:32:35.357 a603 Creating DB /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Service Worker/Database since it was missing.
+2024/11/20-23:32:35.376 a603 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Service Worker/Database/MANIFEST-000001

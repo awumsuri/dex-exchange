@@ -15,7 +15,7 @@ async function main() {
         proxyServer = await ProxyChain.anonymizeProxy(process.env.PROXY_URL);
     }
 
-    const browser = await firefox.launch({
+    const browser = await chromium.launch({
         headless: false,
         args: [
             '--disable-gpu',

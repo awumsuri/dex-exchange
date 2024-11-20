@@ -1,3 +1,2 @@
-2024/11/20-20:20:19.589 3803 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Local Storage/leveldb/MANIFEST-000001
-2024/11/20-20:20:19.592 3803 Recovering log #3
-2024/11/20-20:20:19.592 3803 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Local Storage/leveldb/000003.log 
+2024/11/20-23:32:22.562 3d03 Creating DB /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Local Storage/leveldb since it was missing.
+2024/11/20-23:32:22.605 3d03 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Local Storage/leveldb/MANIFEST-000001

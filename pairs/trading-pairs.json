@@ -58,5 +58,85 @@
     },
     "liquidity": 147,
     "marketCap": 1.3
+  },
+  {
+    "timestamp": "2024-11-20T20:58:21.121Z",
+    "network": "solana",
+    "tokenAddress": "heg74ntkk4dq8cdhwhqy3dwgrq4uar4rwzorsxy7dfgh",
+    "token": "#1\nCHILLPEPE\n/\nSOL\nJust A Chill Pepe",
+    "price": 0.0002478,
+    "pairAge": "12m",
+    "buys": 942,
+    "sells": 509,
+    "volume": 244,
+    "makers": 942,
+    "priceChange": {
+      "m5": 46,
+      "h1": 166,
+      "h6": 166,
+      "h24": 166
+    },
+    "liquidity": 62,
+    "marketCap": 247
+  },
+  {
+    "timestamp": "2024-11-20T21:20:55.957Z",
+    "network": "solana",
+    "tokenAddress": "4yf8arm4u6y74wupr6snjneqjwcjuqxxrkopkqft96bd",
+    "token": "#1\nBALDI\n/\nSOL\nBaldi Baldimore",
+    "price": 0.0002211,
+    "pairAge": "12m",
+    "buys": 941,
+    "sells": 687,
+    "volume": 433,
+    "makers": 836,
+    "priceChange": {
+      "m5": 80.58,
+      "h1": 137,
+      "h6": 137,
+      "h24": 137
+    },
+    "liquidity": 59,
+    "marketCap": 221
+  },
+  {
+    "timestamp": "2024-11-20T21:26:52.762Z",
+    "network": "solana",
+    "tokenAddress": "8ap2hbw2ozavxfzgxrfgg6szv5pyudrov9aq4yzue89c",
+    "token": "#1\nMUSGUY\n/\nSOL\nJust a muslim guy\n500",
+    "price": 0.0001593,
+    "pairAge": "9m",
+    "buys": 3306,
+    "sells": 1291,
+    "volume": 224,
+    "makers": 4206,
+    "priceChange": {
+      "m5": 7.16,
+      "h1": 52.58,
+      "h6": 52.58,
+      "h24": 52.58
+    },
+    "liquidity": 50,
+    "marketCap": 159
+  },
+  {
+    "timestamp": "2024-11-20T21:30:27.473Z",
+    "network": "solana",
+    "tokenAddress": "3gjbfw6xz1dxc4kqv3jcfilqepbyjnc2nwdcunvbkcq9",
+    "token": "#1\nPUMPAI\n/\nSOL\nPUMP AI",
+    "price": 0.0001661,
+    "pairAge": "5m",
+    "buys": 287,
+    "sells": 124,
+    "volume": 94,
+    "makers": 297,
+    "priceChange": {
+      "m5": 70.1,
+      "h1": 70.1,
+      "h6": 70.1,
+      "h24": 70.1
+    },
+    "liquidity": 51,
+    "marketCap": 166
   }
 ]

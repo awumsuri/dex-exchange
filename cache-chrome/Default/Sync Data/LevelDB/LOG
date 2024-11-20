@@ -1,3 +1,2 @@
-2024/11/20-20:21:46.416 a807 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Sync Data/LevelDB/MANIFEST-000001
-2024/11/20-20:21:46.424 a807 Recovering log #3
-2024/11/20-20:21:46.424 a807 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Sync Data/LevelDB/000003.log 
+2024/11/20-23:32:22.508 a703 Creating DB /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Sync Data/LevelDB since it was missing.
+2024/11/20-23:32:22.545 a703 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Sync Data/LevelDB/MANIFEST-000001

@@ -1,4 +1,3 @@
-2024/11/20-20:21:50.928 a303 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/20-20:21:50.929 a303 Recovering log #3
-2024/11/20-20:21:50.929 a303 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/000003.log 
-2024/11/20-20:21:50.964 f803 Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/20-23:32:34.006 a703 Creating DB /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb since it was missing.
+2024/11/20-23:32:34.020 a703 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/20-23:32:34.059 f403 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
