@@ -1,4 +1,4 @@
-import { chromium } from 'playwright';
+import { chromium, firefox } from 'playwright';
 import os from 'os';
 import dotenv from 'dotenv';
 import fs from 'fs';
@@ -15,7 +15,7 @@ async function main() {
         proxyServer = await ProxyChain.anonymizeProxy(process.env.PROXY_URL);
     }
 
-    const browser = await chromium.launch({
+    const browser = await firefox.launch({
         headless: false,
         args: [
             '--disable-gpu',

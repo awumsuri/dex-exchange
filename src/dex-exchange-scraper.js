@@ -78,25 +78,25 @@ async function scrapeDexScreener() {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // Check for verification page
-        const verifyText = await page.evaluate(() => document.body.innerText);
-        if (verifyText.includes('Verify you are human by completing the action below')) {
-            console.log('Detected verification page, waiting for manual verification...');
-            // Find and click the checkbox for verification
-            await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
-            const checkbox = await page.$('input[type="checkbox"]');
-            if (checkbox) {
-                await checkbox.click();
-                console.log('Clicked verification checkbox');
-            } else {
-                console.log('Checkbox not found');
-            }
-            // Wait for verification to complete by checking when the text is no longer present
-            await page.waitForFunction(
-                () => !document.body.innerText.includes('Verify you are human by completing the action below'),
-                { timeout: 10000 } // 5 minute timeout
-            );
-            console.log('Verification completed, continuing...');
-        }
+        // const verifyText = await page.evaluate(() => document.body.innerText);
+        // if (verifyText.includes('Verify you are human by completing the action below')) {
+        //     console.log('Detected verification page, waiting for manual verification...');
+        //     // Find and click the checkbox for verification
+        //     await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
+        //     const checkbox = await page.$('input[type="checkbox"]');
+        //     if (checkbox) {
+        //         await checkbox.click();
+        //         console.log('Clicked verification checkbox');
+        //     } else {
+        //         console.log('Checkbox not found');
+        //     }
+        //     // Wait for verification to complete by checking when the text is no longer present
+        //     await page.waitForFunction(
+        //         () => !document.body.innerText.includes('Verify you are human by completing the action below'),
+        //         { timeout: 10000 } // 5 minute timeout
+        //     );
+        //     console.log('Verification completed, continuing...');
+        // }
 
         while (true) {
             const pairs = await page.evaluate(() => {

@@ -1,1 +1,5 @@
- 
+playwright
+python-dotenv
+user-agents
+requests
+pathlib

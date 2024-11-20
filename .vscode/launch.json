@@ -16,6 +16,26 @@
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Dex Screener Playwright",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/dex-exchange-scraper-playwright.js",
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Dex Screener Playwright Python",
+           
+            "program": "${workspaceFolder}/dex-exchange-scraper.py",
+          
         }
     ]
 }
