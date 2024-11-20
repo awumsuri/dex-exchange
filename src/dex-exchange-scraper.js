@@ -27,6 +27,11 @@ puppeteer.use(StealthPlugin());
 const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : '/root/chrome-cache/'
 const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome-stable'       
 
+const stealthPlugin = StealthPlugin();
+stealthPlugin.enabledEvasions.delete('chrome.runtime')
+stealthPlugin.enabledEvasions.delete('iframe.contentWindow')
+puppeteer.use(stealthPlugin);
+
 const browser = await puppeteer.launch({
     headless: false,  // Use new headless mode
     // defaultViewport: { width: 1920, height: 1080 },
@@ -39,8 +44,15 @@ const browser = await puppeteer.launch({
         '--window-position=0,0',
         '--ignore-certifcate-errors',
         '--ignore-certifcate-errors-spki-list',
-        // ...(os.platform() === 'linux' ? ['--display=:99'] : []),
+        '--disable-blink-features=AutomationControlled',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--disable-site-isolation-trials',
+        '--disable-features=BlockInsecurePrivateNetworkRequests',
+        '--disable-web-security',
+        '--disable-notifications',
+        ...(os.platform() === 'linux' ? ['--display=:99'] : []),
     ],
+    ignoreDefaultArgs: ['--enable-automation'],
 });
 
 
