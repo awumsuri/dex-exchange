@@ -6,15 +6,21 @@ import fs from 'fs';
 import { spawn } from 'child_process';
 import Xvfb from 'xvfb';
 
-// Replace the Xvfb initialization block
+// Modify the Xvfb initialization block
 let xvfb;
 if (os.platform() === 'linux') {
     console.log('Starting Xvfb...')
-    // xvfb = new Xvfb({
-    //     silent: true,
-    //     xvfb_args: ['-screen', '0', '800x600x16', '-ac']
-    // });
-    xvfb = new Xvfb()
+    xvfb = new Xvfb({
+        silent: true,
+        xvfb_args: [
+            '-screen', '0', '1280x1024x24', 
+            '-ac',
+            '+extension', 'RANDR',
+            '+extension', 'RENDER',
+            '-nolisten', 'tcp',
+            '-dpi', '96'
+        ]
+    });
     xvfb.startSync();
     process.env.DISPLAY = ':99';
 }
@@ -78,7 +84,6 @@ async function scrapeDexScreener() {
             // Find and click the checkbox for verification
             await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
             const checkbox = await page.$('input[type="checkbox"]');
-            
             if (checkbox) {
                 await checkbox.click();
                 console.log('Clicked verification checkbox');
