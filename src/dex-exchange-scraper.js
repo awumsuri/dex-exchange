@@ -64,7 +64,7 @@ async function scrapeDexScreener() {
         if (verifyText.includes('Verify you are human by completing the action below')) {
             console.log('Detected verification page, waiting for manual verification...');
             // Find and click the checkbox for verification
-            await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
+            //await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
             const checkbox = await page.$('input[type="checkbox"]');
             if (checkbox) {
                 await checkbox.click();
