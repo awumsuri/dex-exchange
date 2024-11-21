@@ -222,7 +222,7 @@ async function scrapeDexScreener() {
                 });
             });
 
-            console.log('Scraped Pairs:', pairs);
+            // console.log('Scraped Pairs:', pairs);
             // Filter and log pairs with makers over 10000
             const highMakerPairs = pairs.filter(pair => 
                 pair.makers > 800 && // existing makers filter
