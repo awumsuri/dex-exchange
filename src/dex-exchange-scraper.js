@@ -264,7 +264,7 @@ async function scrapeDexScreener() {
                 console.log(`No New Found Tokens == ${new Date()}`)
             }
             // Wait 5 seconds before next evaluation
-            await saveCookies(page);
+            // await saveCookies(page);
 
             await new Promise(resolve => setTimeout(resolve, 5000));
         }
