@@ -225,44 +225,44 @@ async function scrapeDexScreener() {
             console.log('Scraped Pairs:', pairs);
             // Filter and log pairs with makers over 10000
             const highMakerPairs = pairs.filter(pair => 
-                pair.makers > 8 && // existing makers filter
-                pair.liquidity > 5 && // minimum liquidity $100k
-                pair.volume > 8 && // minimum 24h volume $50k
+                pair.makers > 800 && // existing makers filter
+                pair.liquidity > 50000 && // minimum liquidity $100k
+                pair.volume > 80000 && // minimum 24h volume $50k
                 //pair.priceChange.h24 > 0 && // positive 24h price change
                 // pair.buys > pair.sells &&
                 pair.network === 'solana' // more buys than sells
             );
 
-            if (highMakerPairs.length > 0) {
-                console.log('\nFiltered pairs meeting criteria:');
-                // Send only the first pair that meets the criteria
-                const firstPair = highMakerPairs[0];
-                if (!await isTokenAlreadySaved(firstPair.tokenAddress)) {
-                    await sendToTelegram(firstPair);
-                    console.log(JSON.stringify(firstPair, null, 2));
-                } else {
-                    console.log(`Token ${firstPair.token} already saved`);
-                }
-                console.log('------------------------\n');
-            } else {
-                console.log(`No New Found Tokens == ${new Date()}`);
-            }
-            
             // if (highMakerPairs.length > 0) {
             //     console.log('\nFiltered pairs meeting criteria:');
-            //     highMakerPairs.forEach(async pair => {
-            //         if (!await isTokenAlreadySaved(pair.tokenAddress)) {                       
-            //             await sendToTelegram(pair)
-            //             console.log(JSON.stringify(pair, null, 2));                        
-            //         } else {
-            //             console.log(`Token ${pair.token} already saved`);
-            //         }
-                   
-            //     });
+            //     // Send only the first pair that meets the criteria
+            //     const firstPair = highMakerPairs[0];
+            //     if (!await isTokenAlreadySaved(firstPair.tokenAddress)) {
+            //         await sendToTelegram(firstPair);
+            //         console.log(JSON.stringify(firstPair, null, 2));
+            //     } else {
+            //         console.log(`Token ${firstPair.token} already saved`);
+            //     }
             //     console.log('------------------------\n');
             // } else {
-            //     console.log(`No New Found Tokens == ${new Date()}`)
+            //     console.log(`No New Found Tokens == ${new Date()}`);
             // }
+            
+            if (highMakerPairs.length > 0) {
+                console.log('\nFiltered pairs meeting criteria:');
+                highMakerPairs.forEach(async pair => {
+                    if (!await isTokenAlreadySaved(pair.tokenAddress)) {                       
+                        await sendToTelegram(pair)
+                        console.log(JSON.stringify(pair, null, 2));                        
+                    } else {
+                        console.log(`Token ${pair.token} already saved`);
+                    }
+                   
+                });
+                console.log('------------------------\n');
+            } else {
+                console.log(`No New Found Tokens == ${new Date()}`)
+            }
             // Wait 5 seconds before next evaluation
             await saveCookies(page);
 
