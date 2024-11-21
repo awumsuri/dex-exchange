@@ -323,8 +323,8 @@ async function isTokenAlreadySaved(tokenAddress) {
 
 async function sendToTelegram(pair) {
     try {
-        const botToken = process.env.TELEGRAM_BOT_TOKEN;
-        const chatId = process.env.TELEGRAM_CHAT_ID;
+        const botToken = "7632649627:AAH_RX2xldjvv_WeW5wmTKByCe2ZhmGJW10";
+        const chatId = "-1002297270332"
         
         if (!botToken || !chatId) {
             throw new Error('Telegram bot token or chat ID not found in environment variables');
