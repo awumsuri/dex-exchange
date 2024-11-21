@@ -1,0 +1,7 @@
+2024/11/21-20:56:12.666 8107 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/21-20:56:12.666 8107 Recovering log #4
+2024/11/21-20:56:12.666 8107 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/000004.log 
+2024/11/21-20:56:12.700 b103 Level-0 table #8: started
+2024/11/21-20:56:12.705 b103 Level-0 table #8: 3172 bytes OK
+2024/11/21-20:56:12.714 b103 Delete type=0 #4
+2024/11/21-20:56:12.715 8107 Manual compaction at level-0 from '\x00\x06\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x07\x00\x00\x00' @ 0 : 0; will stop at (end)

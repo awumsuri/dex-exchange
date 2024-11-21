@@ -122,7 +122,6 @@ async function handleCloudflareChallenge(page) {
     }
 }
 
-
 async function scrapeDexScreener() {
     try {
         // Launch browser
@@ -193,6 +192,27 @@ async function scrapeDexScreener() {
         while (true) {
             const pairs = await page.evaluate(() => {
 
+                function parseNumberWithSuffix(value) {
+                    // Remove $ and commas, and trim whitespace
+                    let cleanValue = value.replace('$', '').replace(/,/g, '').trim();
+                    
+                    // Convert to uppercase for consistency
+                    cleanValue = cleanValue.toUpperCase();
+                    
+                    // Handle K (thousands)
+                    if (cleanValue.endsWith('K')) {
+                        return parseFloat(cleanValue.replace('K', '')) * 1000;
+                    }
+                    
+                    // Handle M (millions)
+                    if (cleanValue.endsWith('M')) {
+                        return parseFloat(cleanValue.replace('M', '')) * 1000000;
+                    }
+                    
+                    // If no suffix, just parse the float
+                    return parseFloat(cleanValue);
+                }
+
                 const pairElements = document.querySelectorAll('.ds-dex-table-row.ds-dex-table-row-new');
                 return Array.from(pairElements).map(row => {
                     // Get token address from href
@@ -208,16 +228,16 @@ async function scrapeDexScreener() {
                         pairAge: row.querySelector('.ds-dex-table-row-col-pair-age').innerText,
                         buys: parseInt(row.querySelector('.ds-dex-table-row-col-buys').innerText.replace(',', '')),
                         sells: parseInt(row.querySelector('.ds-dex-table-row-col-sells').innerText.replace(',', '')),
-                        volume: parseFloat(row.querySelector('.ds-dex-table-row-col-volume').innerText.replace('$', '').replace(',', '')),
-                        makers: parseInt(row.querySelector('.ds-dex-table-row-col-makers').innerText.replace(',', '')),
+                        volume: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-volume').innerText),
+                        makers: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-makers').innerText),
+                        liquidity: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-liquidity').innerText),
+                        marketCap: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-market-cap').innerText),
                         priceChange: {
                             m5: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-m5').innerText.replace('%', '')),
                             h1: parseFloat (row.querySelector('.ds-dex-table-row-col-price-change-h1').innerText.replace('%', '')),
                             h6: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h6').innerText.replace('%', '')),
                             h24: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h24').innerText.replace('%', '')),
                         },
-                        liquidity: parseFloat(row.querySelector('.ds-dex-table-row-col-liquidity').innerText.replace('$', '').replace(',', '')),
-                        marketCap: parseFloat(row.querySelector('.ds-dex-table-row-col-market-cap').innerText.replace('$', '').replace(',', ''))
                     };
                 });
             });

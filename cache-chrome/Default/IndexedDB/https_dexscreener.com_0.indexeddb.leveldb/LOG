@@ -1,3 +1,13 @@
-2024/11/20-23:32:34.006 a703 Creating DB /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb since it was missing.
-2024/11/20-23:32:34.020 a703 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/20-23:32:34.059 f403 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/21-20:57:34.629 8403 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/21-20:57:34.629 8403 Recovering log #7
+2024/11/21-20:57:34.629 8403 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/000007.log 
+2024/11/21-20:57:34.698 f603 Level-0 table #11: started
+2024/11/21-20:57:34.703 f603 Level-0 table #11: 2296 bytes OK
+2024/11/21-20:57:34.712 f603 Delete type=0 #7
+2024/11/21-20:57:34.713 a703 Manual compaction at level-0 from '\x00\x07\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x08\x00\x00\x00' @ 0 : 0; will stop at '\x00\x07\x00\x00\x05' @ 334 : 1
+2024/11/21-20:57:34.713 a703 Compacting 1@0 + 1@1 files
+2024/11/21-20:57:34.717 a703 Generated table #12@0: 36 keys, 1808 bytes
+2024/11/21-20:57:34.717 a703 Compacted 1@0 + 1@1 files => 1808 bytes
+2024/11/21-20:57:34.728 a703 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/11/21-20:57:34.728 a703 Delete type=2 #11
+2024/11/21-20:57:34.728 a703 Manual compaction at level-0 from '\x00\x07\x00\x00\x05' @ 334 : 1 .. '\x00\x08\x00\x00\x00' @ 0 : 0; will stop at (end)
