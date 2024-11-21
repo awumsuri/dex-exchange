@@ -32,7 +32,16 @@ dotenv.config();
 
 puppeteer.use(StealthPlugin());
 const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : '/root/chrome-cache/'
-const executablePath = os.platform() === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : '/usr/bin/google-chrome-stable'       
+const executablePath = (() => {
+    switch (os.platform()) {
+        case 'darwin':
+            return path.join('/Applications', 'Google Chrome.app', 'Contents', 'MacOS', 'Google Chrome');
+        case 'win32':
+            return path.join('C:', 'Program Files', 'Google', 'Chrome', 'Application', 'chrome.exe');
+        default:
+            return path.join('/usr', 'bin', 'google-chrome-stable');
+    }
+})();
 
 const stealthPlugin = StealthPlugin();
 stealthPlugin.enabledEvasions.delete('chrome.runtime')
