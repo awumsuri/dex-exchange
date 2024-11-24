@@ -14,7 +14,7 @@ if (os.platform() === 'linux') {
     xvfb = new Xvfb({
         silent: true,
         xvfb_args: [
-            '-screen', '0', '1280x1024x24', 
+            '-screen', '0', '1280x1024x24',
             '-ac',
             '+extension', 'RANDR',
             '+extension', 'RENDER',
@@ -46,7 +46,13 @@ const executablePath = (() => {
 const stealthPlugin = StealthPlugin();
 stealthPlugin.enabledEvasions.delete('chrome.runtime')
 stealthPlugin.enabledEvasions.delete('iframe.contentWindow')
+
+
 puppeteer.use(stealthPlugin);
+
+
+
+
 
 const browser = await puppeteer.launch({
     headless: false,
@@ -90,32 +96,32 @@ async function handleCloudflareChallenge(page) {
     try {
         // Wait for Turnstile iframe to load
         await page.waitForSelector('iframe[src*="challenges.cloudflare.com"]', { timeout: 10000 });
-        
+
         // Get all frames
         const frames = page.frames();
         const challengeFrame = frames.find(frame => frame.url().includes('challenges.cloudflare.com'));
-        
+
         if (challengeFrame) {
             // Wait for the challenge widget to be ready
             await challengeFrame.waitForSelector('#cf-stage', { timeout: 10000 });
-            
+
             // Try to find and interact with the challenge
             const verifyButton = await challengeFrame.$('#cf-stage button');
             if (verifyButton) {
                 await verifyButton.click();
                 console.log('Clicked verification button');
             }
-            
+
             // Wait for verification to complete
             await page.waitForFunction(
                 () => !document.querySelector('div[class*="turnstile"]'),
                 { timeout: 30000 }
             );
         }
-        
+
         // Wait for redirect after successful verification
         await page.waitForNavigation({ timeout: 30000 });
-        
+
     } catch (error) {
         console.error('Error handling Cloudflare challenge:', error);
         throw error;
@@ -125,17 +131,17 @@ async function handleCloudflareChallenge(page) {
 async function scrapeDexScreener() {
     try {
         // Launch browser
-       
+
 
         const page = await browser.newPage();
 
-         // Load saved cookies if they exist
-         await loadCookies(page);
+        // Load saved cookies if they exist
+        await loadCookies(page);
 
-         // Set a more realistic user agent
-         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+        // Set a more realistic user agent
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
-         // Add extra headers
+        // Add extra headers
         await page.setExtraHTTPHeaders({
             'Accept-Language': 'en-US,en;q=0.9',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
@@ -149,17 +155,17 @@ async function scrapeDexScreener() {
             'sec-fetch-mode': 'navigate',
             'sec-fetch-site': 'none',
             'sec-fetch-user': '?1',
-        });        
-        
+        });
+
 
         // Initial page load
         await page.goto('https://dexscreener.com/?rankBy=pairAge&order=asc&minLiq=50000&min24HVol=80000&profile=1', {
             timeout: 60000
         });
 
-         // Check for and handle Cloudflare challenge
-         // If we encounter Cloudflare and manage to pass it, save the cookies
-         if (await page.$('div[class*="turnstile"]') !== null) {
+        // Check for and handle Cloudflare challenge
+        // If we encounter Cloudflare and manage to pass it, save the cookies
+        if (await page.$('div[class*="turnstile"]') !== null) {
             await handleCloudflareChallenge(page);
             // Save cookies after successful verification
             await saveCookies(page);
@@ -168,26 +174,7 @@ async function scrapeDexScreener() {
         // Initial delay to ensure WebSocket connection
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Check for verification page
-        // const verifyText = await page.evaluate(() => document.body.innerText);
-        // if (verifyText.includes('Verify you are human by completing the action below')) {
-        //     console.log('Detected verification page, waiting for manual verification...');
-        //     // Find and click the checkbox for verification
-        //     await page.waitForSelector('input[type="checkbox"]', { timeout: 30000 });
-        //     const checkbox = await page.$('input[type="checkbox"]');
-        //     if (checkbox) {
-        //         await checkbox.click();
-        //         console.log('Clicked verification checkbox');
-        //     } else {
-        //         console.log('Checkbox not found');
-        //     }
-        //     // Wait for verification to complete by checking when the text is no longer present
-        //     await page.waitForFunction(
-        //         () => !document.body.innerText.includes('Verify you are human by completing the action below'),
-        //         { timeout: 10000 } // 5 minute timeout
-        //     );
-        //     console.log('Verification completed, continuing...');
-        // }
+
 
         while (true) {
             const pairs = await page.evaluate(() => {
@@ -195,20 +182,20 @@ async function scrapeDexScreener() {
                 function parseNumberWithSuffix(value) {
                     // Remove $ and commas, and trim whitespace
                     let cleanValue = value.replace('$', '').replace(/,/g, '').trim();
-                    
+
                     // Convert to uppercase for consistency
                     cleanValue = cleanValue.toUpperCase();
-                    
+
                     // Handle K (thousands)
                     if (cleanValue.endsWith('K')) {
                         return parseFloat(cleanValue.replace('K', '')) * 1000;
                     }
-                    
+
                     // Handle M (millions)
                     if (cleanValue.endsWith('M')) {
                         return parseFloat(cleanValue.replace('M', '')) * 1000000;
                     }
-                    
+
                     // If no suffix, just parse the float
                     return parseFloat(cleanValue);
                 }
@@ -219,11 +206,13 @@ async function scrapeDexScreener() {
                     const tokenAddress = row.getAttribute('href').split('/').pop();
                     // Get network name from href
                     const network = row.getAttribute('href').split('/')[1];
-                    
+
                     return {
                         network,
                         tokenAddress,
-                        token: row.querySelector('.ds-dex-table-row-col-token').innerText,
+                        token: row.querySelector('.ds-dex-table-row-col-token').innerText
+                            .replace(/[^a-zA-Z0-9]/g, ' ')  // Remove special characters
+                            .trim(),  // Remove leading/trailing whitespace
                         price: parseFloat(row.querySelector('.ds-dex-table-row-col-price').innerText.replace('$', '').replace(',', '')),
                         pairAge: row.querySelector('.ds-dex-table-row-col-pair-age').innerText,
                         buys: parseInt(row.querySelector('.ds-dex-table-row-col-buys').innerText.replace(',', '')),
@@ -234,7 +223,7 @@ async function scrapeDexScreener() {
                         marketCap: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-market-cap').innerText),
                         priceChange: {
                             m5: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-m5').innerText.replace('%', '')),
-                            h1: parseFloat (row.querySelector('.ds-dex-table-row-col-price-change-h1').innerText.replace('%', '')),
+                            h1: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h1').innerText.replace('%', '')),
                             h6: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h6').innerText.replace('%', '')),
                             h24: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h24').innerText.replace('%', '')),
                         },
@@ -244,7 +233,7 @@ async function scrapeDexScreener() {
 
             // console.log('Scraped Pairs:', pairs);
             // Filter and log pairs with makers over 10000
-            const highMakerPairs = pairs.filter(pair => 
+            const highMakerPairs = pairs.filter(pair =>
                 pair.makers > 800 && // existing makers filter
                 pair.liquidity > 50000 && // minimum liquidity $100k
                 pair.volume > 80000 && // minimum 24h volume $50k
@@ -253,32 +242,25 @@ async function scrapeDexScreener() {
                 pair.network === 'solana' // more buys than sells
             );
 
-            // if (highMakerPairs.length > 0) {
-            //     console.log('\nFiltered pairs meeting criteria:');
-            //     // Send only the first pair that meets the criteria
-            //     const firstPair = highMakerPairs[0];
-            //     if (!await isTokenAlreadySaved(firstPair.tokenAddress)) {
-            //         await sendToTelegram(firstPair);
-            //         console.log(JSON.stringify(firstPair, null, 2));
-            //     } else {
-            //         console.log(`Token ${firstPair.token} already saved`);
-            //     }
-            //     console.log('------------------------\n');
-            // } else {
-            //     console.log(`No New Found Tokens == ${new Date()}`);
-            // }
-            
             if (highMakerPairs.length > 0) {
                 console.log('\nFiltered pairs meeting criteria:');
-                highMakerPairs.forEach(async pair => {
-                    if (!await isTokenAlreadySaved(pair.tokenAddress)) {                       
-                        await sendToTelegram(pair)
-                        console.log(JSON.stringify(pair, null, 2));                        
+                for (const pair of highMakerPairs) {
+                    if (!await isTokenAlreadySaved(pair.tokenAddress)) {
+                        // Open token in new page and get additional details
+                        const contractAddresses = await scrapeTokenDetails(browser, pair);
+
+                        for (const contractAddress of contractAddresses) {
+                            if (contractAddress.toLowerCase().includes('pump')) {
+                                const enrichedPair = { ...pair, contractAddress };
+                                await sendToTelegram(enrichedPair);
+                                console.log(JSON.stringify(enrichedPair, null, 2));
+                            }
+                        }
+
                     } else {
                         console.log(`Token ${pair.token} already saved`);
                     }
-                   
-                });
+                }
                 console.log('------------------------\n');
             } else {
                 console.log(`No New Found Tokens == ${new Date()}`)
@@ -293,14 +275,14 @@ async function scrapeDexScreener() {
         console.error('Scraping error:', error);
         browser.close()
         throw error
-    } 
+    }
 }
 
 
 async function isTokenAlreadySaved(tokenAddress) {
     try {
         const filename = './pairs/trading-pairs.json';
-        
+
         // If file doesn't exist, token is not saved
         if (!fs.existsSync(filename)) {
             return false;
@@ -325,11 +307,11 @@ async function sendToTelegram(pair) {
     try {
         const botToken = "7632649627:AAH_RX2xldjvv_WeW5wmTKByCe2ZhmGJW10";
         const chatId = "-1002297270332"
-        
+
         if (!botToken || !chatId) {
             throw new Error('Telegram bot token or chat ID not found in environment variables');
         }
-        
+
         const message = `
 🔥 New Token Alert 🔥
 
@@ -352,7 +334,7 @@ Age: ${pair.pairAge}
 • 6h: ${pair.priceChange.h6}%
 • 24h: ${pair.priceChange.h24}%
 
-🔗 Contract: ${pair.tokenAddress}
+🔗 Contract: ${pair.contractAddress}
 `;
 
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -371,11 +353,11 @@ Age: ${pair.pairAge}
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         console.log('Message sent to Telegram successfully');
 
         savePairToFile(pair)
-        
+
     } catch (error) {
         console.error('Error sending to Telegram:', error);
     }
@@ -457,5 +439,56 @@ async function loadCookies(page, filePath = './cookies.json') {
         console.log('Cookies loaded successfully!');
     } catch (error) {
         console.error('Failed to load cookies:', error);
+    }
+}
+
+// Add this new function to scrape token details
+async function scrapeTokenDetails(browser, pair) {
+    const tokenPage = await browser.newPage();
+    try {
+        // Construct the URL for the token page
+        const tokenUrl = `https://dexscreener.com/${pair.network}/${pair.tokenAddress}`;
+        await tokenPage.goto(tokenUrl, { waitUntil: 'networkidle2' });
+
+        // Wait for chakra-text elements to appear
+        await tokenPage.waitForSelector('span.chakra-text', {
+            timeout: 30000 // 30 second timeout
+        });
+
+        // Wait 3 seconds to allow dynamic content to load
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        // Scrape additional details
+        const contractAddress = await tokenPage.evaluate((pairData) => {
+            // Find all chakra-text elements
+            const chakraTexts = document.querySelectorAll('div span.chakra-text');
+            const tokenElements = []
+            const tokenNames = []
+
+            // Find the element that matches the token name
+            chakraTexts.forEach(element => {
+                const elementText = element.innerText.trim()
+                if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
+                    tokenElements.push(element)
+                }
+                // tokenNames.push(elementText)
+            });
+            // Get all title attributes from matching token elements
+            const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
+
+            // Filter for Solana contract addresses (they start with a letter and are 32-44 chars)
+            const solanaAddresses = contractAddresses.filter(addr =>
+               addr.length >= 32
+            );
+            // Return first matching Solana address or undefined if none found
+            return solanaAddresses
+        }, pair);
+
+        return contractAddress;
+
+    } catch (error) {
+        console.error('Error scraping token details:', error);
+        return {};
+    } finally {
+        await tokenPage.close();
     }
 }

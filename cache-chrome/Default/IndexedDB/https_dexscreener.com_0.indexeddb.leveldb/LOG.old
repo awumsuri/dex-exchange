@@ -1,7 +1,25 @@
-2024/11/21-20:56:12.666 8107 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/21-20:56:12.666 8107 Recovering log #4
-2024/11/21-20:56:12.666 8107 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/000004.log 
-2024/11/21-20:56:12.700 b103 Level-0 table #8: started
-2024/11/21-20:56:12.705 b103 Level-0 table #8: 3172 bytes OK
-2024/11/21-20:56:12.714 b103 Delete type=0 #4
-2024/11/21-20:56:12.715 8107 Manual compaction at level-0 from '\x00\x06\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x07\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/24-10:13:27.039 8207 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/24-10:13:27.039 8207 Recovering log #118
+2024/11/24-10:13:27.040 8207 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/IndexedDB/https_dexscreener.com_0.indexeddb.leveldb/000118.log 
+2024/11/24-10:13:27.069 b103 Level-0 table #124: started
+2024/11/24-10:13:27.074 b103 Level-0 table #124: 6050 bytes OK
+2024/11/24-10:13:27.085 b103 Delete type=0 #118
+2024/11/24-10:13:27.086 8207 Manual compaction at level-0 from '\x002\x00\x00\x00' @ 72057594037927935 : 1 .. '\x003\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/24-10:13:32.667 b103 Manual compaction at level-0 from '\x003\x00\x00\x00' @ 72057594037927935 : 1 .. '\x004\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/24-10:13:52.183 b103 Level-0 table #126: started
+2024/11/24-10:13:52.190 b103 Level-0 table #126: 9630 bytes OK
+2024/11/24-10:13:52.203 b103 Delete type=0 #123
+2024/11/24-10:13:52.204 8207 Manual compaction at level-0 from '\x004\x00\x00\x00' @ 72057594037927935 : 1 .. '\x005\x00\x00\x00' @ 0 : 0; will stop at '\x004\x00\x00\x05' @ 3383 : 1
+2024/11/24-10:13:52.204 8207 Compacting 1@0 + 1@1 files
+2024/11/24-10:13:52.210 8207 Generated table #127@0: 67 keys, 3436 bytes
+2024/11/24-10:13:52.210 8207 Compacted 1@0 + 1@1 files => 3436 bytes
+2024/11/24-10:13:52.218 8207 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/11/24-10:13:52.218 8207 Delete type=2 #126
+2024/11/24-10:13:52.219 8207 Manual compaction at level-0 from '\x004\x00\x00\x05' @ 3383 : 1 .. '\x005\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/24-10:14:11.433 8207 Compacting 1@1 + 1@2 files
+2024/11/24-10:14:11.443 8207 Generated table #128@1: 55 keys, 3627 bytes
+2024/11/24-10:14:11.443 8207 Compacted 1@1 + 1@2 files => 3627 bytes
+2024/11/24-10:14:11.454 8207 compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/11/24-10:14:11.454 8207 Delete type=2 #121
+2024/11/24-10:14:11.454 8207 Delete type=2 #124
+2024/11/24-10:14:11.454 8207 Delete type=2 #127

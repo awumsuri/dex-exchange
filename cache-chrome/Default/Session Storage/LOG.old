@@ -1,3 +1,6 @@
-2024/11/21-20:56:10.868 2d03 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Session Storage/MANIFEST-000001
-2024/11/21-20:56:10.871 2d03 Recovering log #3
-2024/11/21-20:56:10.871 2d03 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Session Storage/000003.log 
+2024/11/24-10:15:11.422 2f03 Reusing MANIFEST /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Session Storage/MANIFEST-000001
+2024/11/24-10:15:11.422 2f03 Recovering log #3
+2024/11/24-10:15:11.423 2f03 Reusing old log /Users/surimtui/dexexchange-scraper/cache-chrome/Default/Session Storage/000003.log 
+2024/11/24-10:24:06.631 3203 Level-0 table #5: started
+2024/11/24-10:24:06.637 3203 Level-0 table #5: 10776 bytes OK
+2024/11/24-10:24:06.646 3203 Delete type=0 #3
