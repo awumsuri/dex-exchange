@@ -87,6 +87,7 @@ const browser = await puppeteer.launch({
         '--metrics-recording-only',
         '--mute-audio',
         '--no-sandbox',
+        '--start-maximized',
         ...(os.platform() === 'linux' ? ['--display=:99'] : []),
     ],
     ignoreDefaultArgs: ['--enable-automation'],
@@ -476,9 +477,7 @@ async function scrapeTokenDetails(browser, pair) {
             const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
 
             // Filter for Solana contract addresses (they start with a letter and are 32-44 chars)
-            const solanaAddresses = contractAddresses.filter(addr =>
-               addr.length >= 32
-            );
+            const solanaAddresses = contractAddresses.filter(addr => addr.length >= 32 && /^[A-Za-z]/.test(addr));
             // Return first matching Solana address or undefined if none found
             return solanaAddresses
         }, pair);
