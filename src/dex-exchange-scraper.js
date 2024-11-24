@@ -58,6 +58,11 @@ const browser = await puppeteer.launch({
     headless: false,
     userDataDir: cacheLocation,
     executablePath: executablePath,
+    defaultViewport: {
+        width: 1440,
+        height: 1024
+    },  // Add this line
+
     args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
