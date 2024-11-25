@@ -54,91 +54,54 @@ puppeteer.use(stealthPlugin);
 
 
 
-const browser = await puppeteer.launch({
-    headless: false,
-    userDataDir: cacheLocation,
-    executablePath: executablePath,
-    defaultViewport: {
-        width: 1440,
-        height: 1024
-    },  // Add this line
-
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-infobars',
-        '--window-position=0,0',
-        '--ignore-certifcate-errors',
-        '--ignore-certifcate-errors-spki-list',
-        '--disable-blink-features=AutomationControlled',
-        '--disable-features=IsolateOrigins,site-per-process',
-        '--disable-site-isolation-trials',
-        '--disable-features=BlockInsecurePrivateNetworkRequests',
-        '--disable-web-security',
-        '--disable-notifications',
-        '--disable-blink-features=AutomationControlled',
-        '--disable-dev-shm-usage',
-        '--disable-accelerated-2d-canvas',
-        '--no-first-run',
-        '--no-zygote',
-        '--disable-gpu',
-        '--lang=en-US,en;q=0.9',
-        '--disable-background-networking',
-        '--disable-default-apps',
-        '--disable-extensions',
-        '--disable-sync',
-        '--disable-translate',
-        '--hide-scrollbars',
-        '--metrics-recording-only',
-        '--mute-audio',
-        '--no-sandbox',
-        '--start-maximized',
-        ...(os.platform() === 'linux' ? ['--display=:99'] : []),
-    ],
-    ignoreDefaultArgs: ['--enable-automation'],
-});
-
-async function handleCloudflareChallenge(page) {
-    try {
-        // Wait for Turnstile iframe to load
-        await page.waitForSelector('iframe[src*="challenges.cloudflare.com"]', { timeout: 10000 });
-
-        // Get all frames
-        const frames = page.frames();
-        const challengeFrame = frames.find(frame => frame.url().includes('challenges.cloudflare.com'));
-
-        if (challengeFrame) {
-            // Wait for the challenge widget to be ready
-            await challengeFrame.waitForSelector('#cf-stage', { timeout: 10000 });
-
-            // Try to find and interact with the challenge
-            const verifyButton = await challengeFrame.$('#cf-stage button');
-            if (verifyButton) {
-                await verifyButton.click();
-                console.log('Clicked verification button');
-            }
-
-            // Wait for verification to complete
-            await page.waitForFunction(
-                () => !document.querySelector('div[class*="turnstile"]'),
-                { timeout: 30000 }
-            );
-        }
-
-        // Wait for redirect after successful verification
-        await page.waitForNavigation({ timeout: 30000 });
-
-    } catch (error) {
-        console.error('Error handling Cloudflare challenge:', error);
-        throw error;
-    }
-}
-
 async function scrapeDexScreener() {
+    let browser;
     try {
-        // Launch browser
+        browser = await puppeteer.launch({
+            headless: false,
+            userDataDir: cacheLocation,
+            executablePath: executablePath,
+            defaultViewport: {
+                width: 1440,
+                height: 1024
+            },  // Add this line
 
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-infobars',
+                '--window-position=0,0',
+                '--ignore-certifcate-errors',
+                '--ignore-certifcate-errors-spki-list',
+                '--disable-blink-features=AutomationControlled',
+                '--disable-features=IsolateOrigins,site-per-process',
+                '--disable-site-isolation-trials',
+                '--disable-features=BlockInsecurePrivateNetworkRequests',
+                '--disable-web-security',
+                '--disable-notifications',
+                '--disable-blink-features=AutomationControlled',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+                '--disable-gpu',
+                '--lang=en-US,en;q=0.9',
+                '--disable-background-networking',
+                '--disable-default-apps',
+                '--disable-extensions',
+                '--disable-sync',
+                '--disable-translate',
+                '--hide-scrollbars',
+                '--metrics-recording-only',
+                '--mute-audio',
+                '--no-sandbox',
+                '--start-maximized',
+                ...(os.platform() === 'linux' ? ['--display=:99'] : []),
+            ],
+            ignoreDefaultArgs: ['--enable-automation'],
+        });
 
+        // Move browser initialization inside this function
         const page = await browser.newPage();
 
         // Load saved cookies if they exist
@@ -279,8 +242,12 @@ async function scrapeDexScreener() {
 
     } catch (error) {
         console.error('Scraping error:', error);
-        browser.close()
-        throw error
+        if (browser) {
+            await browser.close();
+        }
+        // Restart the scraping process after a delay
+        console.log('Restarting scraper in 10 seconds...');
+        setTimeout(() => scrapeDexScreener(), 10000);
     }
 }
 
@@ -404,26 +371,19 @@ async function savePairToFile(pair) {
 
 
 
-// Modify the execution block to handle SIGINT (Ctrl+C)
+// Modify the execution block to remove the global browser reference
 process.on('SIGINT', async () => {
     console.log('Closing browser and exiting...');
-    await browser.close();
     if (xvfb) {
         xvfb.kill();
     }
-    process.exit(0)
+    process.exit(0);
 });
 
-// Execute the scraper
-scrapeDexScreener()
-    .then(data => {
-        // Handle the scraped data here
-        console.log('Total pairs found:', data.length);
-    })
-    .catch(error => {
-        console.error('Failed to scrape DEXScreener:', error);
-        browser.close();
-    });
+// Modify the execution to just call the function
+scrapeDexScreener().catch(error => {
+    console.error('Failed to scrape DEXScreener:', error);
+});
 
 
 
@@ -449,50 +409,50 @@ async function loadCookies(page, filePath = './cookies.json') {
 }
 
 // Add this new function to scrape token details
-async function scrapeTokenDetails(browser, pair) {
-    const tokenPage = await browser.newPage();
-    try {
-        // Construct the URL for the token page
-        const tokenUrl = `https://dexscreener.com/${pair.network}/${pair.tokenAddress}`;
-        await tokenPage.goto(tokenUrl, { waitUntil: 'networkidle2' });
+async function scrapeTokenDetails(browser, pair, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const tokenPage = await browser.newPage();
+            // Construct the URL for the token page
+            const tokenUrl = `https://dexscreener.com/${pair.network}/${pair.tokenAddress}`;
+            await tokenPage.goto(tokenUrl, { waitUntil: 'networkidle2' });
 
-        // Wait for chakra-text elements to appear
-        await tokenPage.waitForSelector('span.chakra-text', {
-            timeout: 30000 // 30 second timeout
-        });
-
-        // Wait 3 seconds to allow dynamic content to load
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        // Scrape additional details
-        const contractAddress = await tokenPage.evaluate((pairData) => {
-            // Find all chakra-text elements
-            const chakraTexts = document.querySelectorAll('div span.chakra-text');
-            const tokenElements = []
-            const tokenNames = []
-
-            // Find the element that matches the token name
-            chakraTexts.forEach(element => {
-                const elementText = element.innerText.trim()
-                if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
-                    tokenElements.push(element)
-                }
-                // tokenNames.push(elementText)
+            // Wait for chakra-text elements to appear
+            await tokenPage.waitForSelector('span.chakra-text', {
+                timeout: 30000 // 30 second timeout
             });
-            // Get all title attributes from matching token elements
-            const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
 
-            // Filter for Solana contract addresses (they start with a letter and are 32-44 chars)
-            const solanaAddresses = contractAddresses.filter(addr => addr.length >= 32 && /^[A-Za-z]/.test(addr));
-            // Return first matching Solana address or undefined if none found
-            return solanaAddresses
-        }, pair);
+            // Wait 3 seconds to allow dynamic content to load
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            // Scrape additional details
+            const contractAddress = await tokenPage.evaluate((pairData) => {
+                // Find all chakra-text elements
+                const chakraTexts = document.querySelectorAll('div span.chakra-text');
+                const tokenElements = []
+                const tokenNames = []
 
-        return contractAddress;
+                // Find the element that matches the token name
+                chakraTexts.forEach(element => {
+                    const elementText = element.innerText.trim()
+                    if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
+                        tokenElements.push(element)
+                    }
+                    // tokenNames.push(elementText)
+                });
+                // Get all title attributes from matching token elements
+                const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
 
-    } catch (error) {
-        console.error('Error scraping token details:', error);
-        return {};
-    } finally {
-        await tokenPage.close();
+                // Filter for Solana contract addresses (they start with a letter and are 32-44 chars)
+                const solanaAddresses = contractAddresses.filter(addr => addr.length >= 32 );
+                // Return first matching Solana address or undefined if none found
+                return solanaAddresses
+            }, pair);
+
+            return contractAddress;
+        } catch (error) {
+            console.error(`Error scraping token details (attempt ${i + 1}/${retries}):`, error);
+            if (i === retries - 1) throw error; // Throw on last attempt
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s between retries
+        }
     }
 }
