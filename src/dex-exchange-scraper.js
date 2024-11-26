@@ -429,8 +429,7 @@ async function scrapeTokenDetails(browser, pair, retries = 3) {
                 // Find all chakra-text elements
                 const chakraTexts = document.querySelectorAll('div span.chakra-text');
                 const tokenElements = []
-                const tokenNames = []
-
+              
                 // Find the element that matches the token name
                 chakraTexts.forEach(element => {
                     const elementText = element.innerText.trim()
@@ -447,7 +446,7 @@ async function scrapeTokenDetails(browser, pair, retries = 3) {
                 // Return first matching Solana address or undefined if none found
                 return solanaAddresses
             }, pair);
-
+            await tokenPage.close();
             return contractAddress;
         } catch (error) {
             console.error(`Error scraping token details (attempt ${i + 1}/${retries}):`, error);
