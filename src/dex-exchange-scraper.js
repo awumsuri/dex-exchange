@@ -407,49 +407,42 @@ async function loadCookies(page, filePath = './cookies.json') {
 }
 
 // Add this new function to scrape token details
-async function scrapeTokenDetails(browser, pair, retries = 3) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const tokenPage = await browser.newPage();
-            // Construct the URL for the token page
-            const tokenUrl = `https://dexscreener.com/${pair.network}/${pair.tokenAddress}`;
-            await tokenPage.goto(tokenUrl, { waitUntil: 'networkidle2' });
+async function scrapeTokenDetails(browser, pair) {
+    try {
+        const tokenPage = await browser.newPage();
+        // Construct the URL for the token page
+        const tokenUrl = `https://dexscreener.com/${pair.network}/${pair.tokenAddress}`;
+        await tokenPage.goto(tokenUrl, { waitUntil: 'networkidle2' });
 
-            // Wait for chakra-text elements to appear
-            await tokenPage.waitForSelector('span.chakra-text', {
-                timeout: 30000 // 30 second timeout
+        // Wait for chakra-text elements to appear
+        await tokenPage.waitForSelector('span.chakra-text', {
+            timeout: 30000 // 30 second timeout
+        });
+
+        // Wait 3 seconds to allow dynamic content to load
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        // Scrape additional details
+        const contractAddress = await tokenPage.evaluate((pairData) => {
+            const chakraTexts = document.querySelectorAll('div span.chakra-text');
+            const tokenElements = []
+          
+            chakraTexts.forEach(element => {
+                const elementText = element.innerText.trim()
+                if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
+                    tokenElements.push(element)
+                }
             });
 
-            // Wait 3 seconds to allow dynamic content to load
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            // Scrape additional details
-            const contractAddress = await tokenPage.evaluate((pairData) => {
-                // Find all chakra-text elements
-                const chakraTexts = document.querySelectorAll('div span.chakra-text');
-                const tokenElements = []
-              
-                // Find the element that matches the token name
-                chakraTexts.forEach(element => {
-                    const elementText = element.innerText.trim()
-                    if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
-                        tokenElements.push(element)
-                    }
-                    // tokenNames.push(elementText)
-                });
-                // Get all title attributes from matching token elements
-                const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
-
-                // Filter for Solana contract addresses (they start with a letter and are 32-44 chars)
-                const solanaAddresses = contractAddresses.filter(addr => addr.length >= 32 );
-                // Return first matching Solana address or undefined if none found
-                return solanaAddresses
-            }, pair);
-            await tokenPage.close();
-            return contractAddress;
-        } catch (error) {
-            console.error(`Error scraping token details (attempt ${i + 1}/${retries}):`, error);
-            if (i === retries - 1) throw error; // Throw on last attempt
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s between retries
-        }
+            const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
+            return contractAddresses.filter(addr => addr.length >= 32);
+        }, pair);
+        
+        await tokenPage.close();
+        return contractAddress;
+    } catch (error) {
+        console.error('Error scraping token details:', error);
+        await tokenPage.close();
+        return [];
     }
 }
