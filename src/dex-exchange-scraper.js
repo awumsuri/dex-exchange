@@ -307,6 +307,8 @@ Age: ${pair.pairAge}
 • 6h: ${pair.priceChange.h6}%
 • 24h: ${pair.priceChange.h24}%
 
+url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
+
 🔗 Contract: ${pair.contractAddress}
 `;
 
