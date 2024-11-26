@@ -61,11 +61,7 @@ async function scrapeDexScreener() {
             headless: false,
             userDataDir: cacheLocation,
             executablePath: executablePath,
-            defaultViewport: {
-                width: 1440,
-                height: 1024
-            },  // Add this line
-
+            defaultViewport: null,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
