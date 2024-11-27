@@ -255,14 +255,18 @@ async function scrapeDexScreener() {
                         // Open token in new page and get additional details
                         const contractAddresses = await scrapeTokenDetails(browser, pair);
 
-                        for (const contractAddress of contractAddresses) {
-                            const enrichedPair = { ...pair, contractAddress };
-                            if (contractAddress.toLowerCase().includes('pump')) {                              
-                                await sendToTelegram(enrichedPair);
-                                console.log(JSON.stringify(enrichedPair, null, 2));                             
-                            }
-                            savePairToFile(enrichedPair)
-                        }                        
+                        if (contractAddresses.length > 0) {
+                            for (const contractAddress of contractAddresses) {
+                                const enrichedPair = { ...pair, contractAddress };
+                                if (contractAddress.toLowerCase().includes('pump')) {                              
+                                    await sendToTelegram(enrichedPair);
+                                    console.log(JSON.stringify(enrichedPair, null, 2));                             
+                                }
+                                savePairToFile(enrichedPair)
+                            }  
+                        } else {
+                            savePairToFile(pair)
+                        }                      
 
                     } else {
                         console.log(`Token ${pair.token} already saved`);
