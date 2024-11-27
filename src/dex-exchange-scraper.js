@@ -281,11 +281,8 @@ async function sendToTelegram(pair) {
             throw new Error('Telegram bot token or chat ID not found in environment variables');
         }
 
-        const message = `
-        <a href="https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG">&#8205;</a>
-
+        const message = `<a href="https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG">&#8205;</a>
 🔥 New Token Alert 🔥
-
 
 Token: ${pair.token}
 Network: ${pair.network}
@@ -306,9 +303,9 @@ Age: ${pair.pairAge}
 • 6h: ${pair.priceChange.h6}%
 • 24h: ${pair.priceChange.h24}%
 
-url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
-
 🔗 Contract: ${pair.contractAddress}
+
+url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
 `;
 
         const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
