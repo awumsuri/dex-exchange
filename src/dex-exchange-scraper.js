@@ -6,6 +6,7 @@ import fs from 'fs';
 import { spawn } from 'child_process';
 import Xvfb from 'xvfb';
 import path from 'path';
+import TelegramBot from 'node-telegram-bot-api';
 
 // Modify the Xvfb initialization block
 let xvfb;
@@ -63,38 +64,36 @@ async function scrapeDexScreener() {
             executablePath: executablePath,
             defaultViewport: null,
             args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-infobars',
-                '--window-position=0,0',
+                // '--no-sandbox',
+                // '--disable-setuid-sandbox',
+                // '--disable-infobars',
+                //'--window-position=0,0',
                 '--ignore-certifcate-errors',
                 '--ignore-certifcate-errors-spki-list',
-                '--disable-blink-features=AutomationControlled',
-                '--disable-features=IsolateOrigins,site-per-process',
-                '--disable-site-isolation-trials',
-                '--disable-features=BlockInsecurePrivateNetworkRequests',
-                '--disable-web-security',
-                '--disable-notifications',
-                '--disable-blink-features=AutomationControlled',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--no-first-run',
-                '--no-zygote',
-                '--disable-gpu',
+                //'--disable-blink-features=AutomationControlled',
+                //'--disable-features=IsolateOrigins,site-per-process',
+                //'--disable-site-isolation-trials',
+                // '--disable-features=BlockInsecurePrivateNetworkRequests',
+                // '--disable-web-security',
+                // '--disable-notifications',
+                //'--disable-blink-features=AutomationControlled',
+                //'--disable-dev-shm-usage',
+                // '--disable-accelerated-2d-canvas',
+                //  '--no-first-run',
+                // '--no-zygote',
+                // '--disable-gpu',
                 '--lang=en-US,en;q=0.9',
-                '--disable-background-networking',
-                '--disable-default-apps',
-                '--disable-extensions',
-                '--disable-sync',
-                '--disable-translate',
-                '--hide-scrollbars',
-                '--metrics-recording-only',
-                '--mute-audio',
-                '--no-sandbox',
-                '--start-maximized',
-                ...(os.platform() === 'linux' ? ['--display=:99'] : []),
-            ],
-            ignoreDefaultArgs: ['--enable-automation'],
+                // '--disable-background-networking',
+                // '--disable-default-apps',
+                // '--disable-extensions',
+                // '--disable-sync',
+                // '--disable-translate',
+                // '--hide-scrollbars',
+                // '--metrics-recording-only',
+                // '--mute-audio',
+                // '--no-sandbox',
+                '--start-maximized'              
+            ]         
         });
 
         // Move browser initialization inside this function
@@ -104,23 +103,23 @@ async function scrapeDexScreener() {
         await loadCookies(page);
 
         // Set a more realistic user agent
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+        // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
 
-        // Add extra headers
-        await page.setExtraHTTPHeaders({
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'Upgrade-Insecure-Requests': '1',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-        });
+        // // Add extra headers
+        // await page.setExtraHTTPHeaders({
+        //     'Accept-Language': 'en-US,en;q=0.9',
+        //     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        //     'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+        //     'sec-ch-ua-mobile': '?0',
+        //     'sec-ch-ua-platform': '"Windows"',
+        //     'Upgrade-Insecure-Requests': '1',
+        //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        //     'Accept-Encoding': 'gzip, deflate, br',
+        //     'sec-fetch-dest': 'document',
+        //     'sec-fetch-mode': 'navigate',
+        //     'sec-fetch-site': 'none',
+        //     'sec-fetch-user': '?1',
+        // });
 
 
         // Initial page load
@@ -138,8 +137,6 @@ async function scrapeDexScreener() {
 
         // Initial delay to ensure WebSocket connection
         await new Promise(resolve => setTimeout(resolve, 2000));
-
-
 
         while (true) {
             const pairs = await page.evaluate(() => {
@@ -281,7 +278,12 @@ async function sendToTelegram(pair) {
             throw new Error('Telegram bot token or chat ID not found in environment variables');
         }
 
-        const message = `<a href="https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG">&#8205;</a>
+        // Initialize the bot
+        const bot = new TelegramBot(botToken, { polling: false });
+
+        const logoImage = 'https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG'
+
+        const message = `
 🔥 New Token Alert 🔥
 
 Token: ${pair.token}
@@ -308,22 +310,29 @@ Age: ${pair.pairAge}
 url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
 `;
 
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'HTML'
-            })
-        });
+        // const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        // const response = await fetch(url, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         chat_id: chatId,
+        //         text: message,
+        //         parse_mode: 'HTML'
+        //     })
+        // });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // if (!response.ok) {
+        //     throw new Error(`HTTP error! status: ${response.status}`);
+        // }
+
+        bot.sendPhoto(chatId, logoImage, {
+            caption: message
+          })
+          .catch((err) => {
+            console.error('Error sending message:', err);
+          });
 
         console.log('Message sent to Telegram successfully');
 

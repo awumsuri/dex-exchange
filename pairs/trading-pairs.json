@@ -2774,5 +2774,404 @@
       "h24": 803
     },
     "contractAddress": "Gp8GVGPc8QCe4Jn6ryG5YKokG5bjKycATEzqpeyspump"
+  },
+  {
+    "timestamp": "2024-11-27T06:45:58.462Z",
+    "network": "solana",
+    "tokenAddress": "4d1dn5puvwmywxqmje24valpmalyw7rgtw3zf6pkddy3",
+    "token": "3 MUSHY   SOL Mushy Records",
+    "price": 0.004015,
+    "pairAge": "29m",
+    "buys": 12346,
+    "sells": 9488,
+    "volume": 21100000,
+    "makers": 6864,
+    "liquidity": 312000,
+    "marketCap": 4000000,
+    "priceChange": {
+      "m5": 0.17,
+      "h1": 2,
+      "h6": 2,
+      "h24": 2
+    },
+    "contractAddress": "EHupsSUrj1fNGP4RNHUGeKu17fTMe9LzxWDuNGBcpump"
+  },
+  {
+    "timestamp": "2024-11-27T06:46:09.761Z",
+    "network": "solana",
+    "tokenAddress": "cqpmr3pduuuazqmmyuzuarg7w5b9qzmavcmg4ko1jhqr",
+    "token": "4 SAUCE   SOL Sauce",
+    "price": 0.0006515,
+    "pairAge": "42m",
+    "buys": 4629,
+    "sells": 3587,
+    "volume": 2400000,
+    "makers": 3448,
+    "liquidity": 106000,
+    "marketCap": 651000,
+    "priceChange": {
+      "m5": 31.75,
+      "h1": 612,
+      "h6": 612,
+      "h24": 612
+    },
+    "contractAddress": "ArndFsf2QW88Ck62kAYEJnftTKpUT7o96B3dAF6Spump"
+  },
+  {
+    "timestamp": "2024-11-27T06:46:19.341Z",
+    "network": "solana",
+    "tokenAddress": "2svsvejsecreyngvklvgnmvh8zugljjxjexrcbandhvp",
+    "token": "6 ROARSANTA   SOL ROARING KITTY SANTA 500",
+    "price": 0.0007772,
+    "pairAge": "1h 22m",
+    "buys": 13109,
+    "sells": 9675,
+    "volume": 1700000,
+    "makers": 7583,
+    "liquidity": 115000,
+    "marketCap": 777000,
+    "priceChange": {
+      "m5": -4.42,
+      "h1": 203,
+      "h6": 612,
+      "h24": 612
+    },
+    "contractAddress": "FuAESVfzuVHRpmTnG2xdHhAihVHP3gACdcyJjC7cpump"
+  },
+  {
+    "timestamp": "2024-11-27T06:59:13.210Z",
+    "network": "solana",
+    "tokenAddress": "d7whxa8zxskz5px11xdbmenetjsyxvcmdygxrwzqyjxi",
+    "token": "5 EGIRL   SOL EGIRL COIN",
+    "price": 0.0003413,
+    "pairAge": "44m",
+    "buys": 976,
+    "sells": 666,
+    "volume": 331000,
+    "makers": 835,
+    "liquidity": 73000,
+    "marketCap": 341000,
+    "priceChange": {
+      "m5": 39.85,
+      "h1": 277,
+      "h6": 277,
+      "h24": 277
+    },
+    "contractAddress": "j4wJnteieerbDrZxcg46pPvGVJ2fjSEefxZr9V7pump"
+  },
+  {
+    "timestamp": "2024-11-27T06:59:22.029Z",
+    "network": "solana",
+    "tokenAddress": "7hbv24qzk8jtcduwn4dcsujos6rcjd6q1szps6ieavsv",
+    "token": "9 smile   SOL    1500",
+    "price": 0.0003885,
+    "pairAge": "1h 41m",
+    "buys": 8610,
+    "sells": 5862,
+    "volume": 4400000,
+    "makers": 4911,
+    "liquidity": 86000,
+    "marketCap": 388000,
+    "priceChange": {
+      "m5": -17.74,
+      "h1": -46.38,
+      "h6": 324,
+      "h24": 324
+    },
+    "contractAddress": "P669BP2cBZLxbN4g1bcXrd29vsRgGNF4h3mo8N4pump"
+  },
+  {
+    "timestamp": "2024-11-27T06:59:36.660Z",
+    "network": "solana",
+    "tokenAddress": "7herfqb6pa31v1at1vjduh2edca4v2a5eprmsfxefs7c",
+    "token": "11 ongo   SOL ongo ai agent 10",
+    "price": 0.000212,
+    "pairAge": "1h 54m",
+    "buys": 2595,
+    "sells": 2231,
+    "volume": 1200000,
+    "makers": 1673,
+    "liquidity": 60000,
+    "marketCap": 212000,
+    "priceChange": {
+      "m5": 7.17,
+      "h1": 546,
+      "h6": 127,
+      "h24": 127
+    },
+    "contractAddress": "CxN2KctowQ216p9wWRgiQeMe9ExRSrL7UeR2UYRzpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:00:05.612Z",
+    "network": "solana",
+    "tokenAddress": "9jk65c8gxktnvj2wm8qkvg1n5bsynrd5icuzqhxy93ub",
+    "token": "14 autoWassie   SOL autoWassie",
+    "price": 0.001798,
+    "pairAge": "2h 23m",
+    "buys": 15570,
+    "sells": 12377,
+    "volume": 15900000,
+    "makers": 7225,
+    "liquidity": 224000,
+    "marketCap": 1700000,
+    "priceChange": {
+      "m5": -18.36,
+      "h1": -35.66,
+      "h6": 796,
+      "h24": 796
+    },
+    "contractAddress": "G9zVxDjaPmmWbyHQF9g2HeWkr6RsA8VsJDc2eyVfpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:00:23.954Z",
+    "network": "solana",
+    "tokenAddress": "a9a3usldgzo9vgtpre9vp4w61gq99rub2aarps2rinjq",
+    "token": "17 CONSENT   SOL Consent to view this coin 10",
+    "price": 0.004118,
+    "pairAge": "3h 19m",
+    "buys": 41916,
+    "sells": 31038,
+    "volume": 75200000,
+    "makers": 16128,
+    "liquidity": 389000,
+    "marketCap": 4099999.9999999995,
+    "priceChange": {
+      "m5": 6.32,
+      "h1": -18.72,
+      "h6": 1,
+      "h24": 1
+    },
+    "contractAddress": "5dSqxyEpAYwp7rAS6ocwmgyZqYKdeyNjWchwr91fpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:00:39.500Z",
+    "network": "solana",
+    "tokenAddress": "gk8zzq5qb7rz66tpga2lqikmvndmyka6tlw7mxpg869f",
+    "token": "19 CLMM Aejo   SOL Aejo 10",
+    "price": 0.01881,
+    "pairAge": "3h 28m",
+    "buys": 2001,
+    "sells": 1970,
+    "volume": 771000,
+    "makers": 1480,
+    "liquidity": 65000,
+    "marketCap": 18800000,
+    "priceChange": {
+      "m5": -7.56,
+      "h1": 35.53,
+      "h6": 268,
+      "h24": 268
+    },
+    "contractAddress": "B16bhVYwE9zQVjbYpnnmvfN7qJFDe21nx5iQC5LJpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:00:48.703Z",
+    "network": "solana",
+    "tokenAddress": "bpvjy3nmvxwgiupuypzjyf4xzbcv3syeuzewo28kseyg",
+    "token": "22 brAIn   SOL brAIn",
+    "price": 0.0001461,
+    "pairAge": "4h 7m",
+    "buys": 9718,
+    "sells": 8470,
+    "volume": 8300000.000000001,
+    "makers": 5277,
+    "liquidity": 58000,
+    "marketCap": 146000,
+    "priceChange": {
+      "m5": 4.68,
+      "h1": 104,
+      "h6": 26.56,
+      "h24": 26.56
+    },
+    "contractAddress": "869iEKFQPiyGfs54jfxFg497EwoUMZdqYKjCHRqmpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:01:33.025Z",
+    "network": "solana",
+    "tokenAddress": "cycvvs19mpj1ccwfiiwk3m32ltdrw8akchlmf8u75py1",
+    "token": "28 PEPECAT   SOL PEPECAT",
+    "price": 0.0004222,
+    "pairAge": "4h 35m",
+    "buys": 2873,
+    "sells": 2085,
+    "volume": 2400000,
+    "makers": 1582,
+    "liquidity": 83000,
+    "marketCap": 422000,
+    "priceChange": {
+      "m5": -2.89,
+      "h1": -28.01,
+      "h6": 375,
+      "h24": 375
+    },
+    "contractAddress": "CRAMvzDsSpXYsFpcoDr6vFLJMBeftez1E7277xwPpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:01:42.501Z",
+    "network": "solana",
+    "tokenAddress": "484kxnbveyher6jdtvm95ufmjkvq4p85kcvfg62uuw1a",
+    "token": "29 Leo4774   SOL Saw The Other POV On",
+    "price": 0.0001566,
+    "pairAge": "4h 36m",
+    "buys": 2687,
+    "sells": 2448,
+    "volume": 1700000,
+    "makers": 1653,
+    "liquidity": 53000,
+    "marketCap": 156000,
+    "priceChange": {
+      "m5": 34.85,
+      "h1": 150,
+      "h6": 70.84,
+      "h24": 70.84
+    },
+    "contractAddress": "9Td1PcqFs92z9J2KWpoUMBgUnRHfp44J4RRaFxpTpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:01:52.049Z",
+    "network": "solana",
+    "tokenAddress": "9vnfytqpgdhqkjpo2pyli6xspzifmczpdf8dmgozqtvw",
+    "token": "30 Tom   SOL First Assassinated Turkey 100",
+    "price": 0.0001679,
+    "pairAge": "5h 1m",
+    "buys": 5230,
+    "sells": 4002,
+    "volume": 1600000,
+    "makers": 2860,
+    "liquidity": 53000,
+    "marketCap": 167000,
+    "priceChange": {
+      "m5": -0.89,
+      "h1": -34.27,
+      "h6": 80.73,
+      "h24": 80.73
+    },
+    "contractAddress": "DjPbuysiYcXQaQTkC61Us8TDXYAh1jKtgh3QA5ttpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:02:01.807Z",
+    "network": "solana",
+    "tokenAddress": "4jklgvfxnafzfolsnqg2nbtlcoenwnjldo3gbubrfq2i",
+    "token": "32 PEPE   SOL PEPE 100",
+    "price": 0.003306,
+    "pairAge": "5h 47m",
+    "buys": 9994,
+    "sells": 5950,
+    "volume": 3000000,
+    "makers": 11309,
+    "liquidity": 236000,
+    "marketCap": 684000,
+    "priceChange": {
+      "m5": -0.23,
+      "h1": 43.96,
+      "h6": 3,
+      "h24": 3
+    },
+    "contractAddress": "8Q1YqgWBV11MCEG3r2Mszdc29EmS2ETLUBmZ672jpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:02:10.558Z",
+    "network": "solana",
+    "tokenAddress": "26preunkkfvth7g2nw1p9qwelnpjiw47xy31bast3w4l",
+    "token": "35 POOR   SOL Just a poor guy 4000",
+    "price": 0.0001836,
+    "pairAge": "6h 2m",
+    "buys": 5696,
+    "sells": 3206,
+    "volume": 1300000,
+    "makers": 3912,
+    "liquidity": 55000,
+    "marketCap": 183000,
+    "priceChange": {
+      "m5": 3.7,
+      "h1": -6.18,
+      "h6": -32.78,
+      "h24": 104
+    },
+    "contractAddress": "3E1QL2JhpBBDS8tGAYXtRUWZRcJznFRb555szJJ8pump"
+  },
+  {
+    "timestamp": "2024-11-27T07:02:16.826Z",
+    "network": "solana",
+    "tokenAddress": "7tdnr3tnw13wgdz2pbynb9t6t39oskvznitvkcnvn4bw",
+    "token": "36 Aejo   SOL Aejo 10",
+    "price": 0.01884,
+    "pairAge": "6h 7m",
+    "buys": 38899,
+    "sells": 33070,
+    "volume": 54700000,
+    "makers": 15498,
+    "liquidity": 777000,
+    "marketCap": 18800000,
+    "priceChange": {
+      "m5": -9.02,
+      "h1": 34.02,
+      "h6": 1,
+      "h24": 13
+    },
+    "contractAddress": "B16bhVYwE9zQVjbYpnnmvfN7qJFDe21nx5iQC5LJpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:37:54.932Z",
+    "network": "solana",
+    "tokenAddress": "792qckj49wfw4jyeqqvoaa7dx5ptdpbszztfbfkek94y",
+    "token": "2 CHILLMOON   SOL chill moon 500",
+    "price": 0.0003202,
+    "pairAge": "11m",
+    "buys": 3218,
+    "sells": 2773,
+    "volume": 318000,
+    "makers": 3022,
+    "liquidity": 70000,
+    "marketCap": 320000,
+    "priceChange": {
+      "m5": 25.98,
+      "h1": 216,
+      "h6": 216,
+      "h24": 216
+    },
+    "contractAddress": "BPZJYiYPWUoAvLoADLzYfQrC7yvWeF8RbmUJxaXfpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:38:00.960Z",
+    "network": "solana",
+    "tokenAddress": "ebeql1hr9ts2f2l1wc7vttsje7vrgjcriztua2cx1dt3",
+    "token": "8 gc   SOL group chat 550",
+    "price": 0.0002668,
+    "pairAge": "43m",
+    "buys": 2406,
+    "sells": 1767,
+    "volume": 874000,
+    "makers": 1751,
+    "liquidity": 66000,
+    "marketCap": 266000,
+    "priceChange": {
+      "m5": -8.83,
+      "h1": 199,
+      "h6": 199,
+      "h24": 199
+    },
+    "contractAddress": "7u48r3n6p5u6zNqsT1nFnVtr7b93KgNQGfbLyy5Hpump"
+  },
+  {
+    "timestamp": "2024-11-27T07:40:57.399Z",
+    "network": "solana",
+    "tokenAddress": "79da3bah3ox77ofoiwv9mw9b5kpncvdypkbdywbnzqek",
+    "token": "4 PLAYBOY   SOL PLAYBOY",
+    "price": 0.0001899,
+    "pairAge": "22m",
+    "buys": 3206,
+    "sells": 3158,
+    "volume": 341000,
+    "makers": 2939,
+    "liquidity": 54000,
+    "marketCap": 189000,
+    "priceChange": {
+      "m5": -0.95,
+      "h1": 71.04,
+      "h6": 71.04,
+      "h24": 71.04
+    },
+    "contractAddress": "3NnEkZUaAgNrsSWmz5fUWmG7VNyxKExbj4Gp8ppYpump"
   }
 ]
