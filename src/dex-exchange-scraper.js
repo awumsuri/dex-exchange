@@ -257,14 +257,14 @@ async function scrapeDexScreener() {
 
                         for (const contractAddress of contractAddresses) {
                             const enrichedPair = { ...pair, contractAddress };
-
                             if (contractAddress.toLowerCase().includes('pump')) {                              
                                 await sendToTelegram(enrichedPair);
                                 console.log(JSON.stringify(enrichedPair, null, 2));
+                                savePairToFile(enrichedPair)
+                            } else {
+                                savePairToFile(pair)
                             }
-                        }
-
-                        savePairToFile(enrichedPair)
+                        }                        
 
                     } else {
                         console.log(`Token ${pair.token} already saved`);
