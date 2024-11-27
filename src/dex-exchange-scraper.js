@@ -259,11 +259,9 @@ async function scrapeDexScreener() {
                             const enrichedPair = { ...pair, contractAddress };
                             if (contractAddress.toLowerCase().includes('pump')) {                              
                                 await sendToTelegram(enrichedPair);
-                                console.log(JSON.stringify(enrichedPair, null, 2));
-                                savePairToFile(enrichedPair)
-                            } else {
-                                savePairToFile(enrichedPair)
+                                console.log(JSON.stringify(enrichedPair, null, 2));                             
                             }
+                            savePairToFile(enrichedPair)
                         }                        
 
                     } else {
