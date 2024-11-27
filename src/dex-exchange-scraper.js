@@ -241,9 +241,10 @@ async function scrapeDexScreener() {
                 //pair.priceChange.h24 > 0 && // positive 24h price change
                 // pair.buys > pair.sells &&
                 pair.pairAge < 360 &&
-                pair.priceChange.m5 > -50 &&
-                pair.priceChange.h1 > -50 &&
-                pair.priceChange.h6 > -50 &&
+                pair.priceChange.m5 > -65 &&
+                pair.priceChange.h1 > -65 &&
+                pair.priceChange.h6 > -65 &&
+                pair.priceChange.h24 > -65 &&
                 pair.network === 'solana' // more buys than sells
             );
 
