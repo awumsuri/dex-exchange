@@ -219,6 +219,8 @@ async function scrapeDexScreener() {
                             }
                         }
 
+                        savePairToFile(pair)
+
                     } else {
                         console.log(`Token ${pair.token} already saved`);
                     }
@@ -336,7 +338,7 @@ url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
 
         console.log('Message sent to Telegram successfully');
 
-        savePairToFile(pair)
+        // savePairToFile(pair)
 
     } catch (error) {
         console.error('Error sending to Telegram:', error);
