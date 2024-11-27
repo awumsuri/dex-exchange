@@ -235,12 +235,12 @@ async function scrapeDexScreener() {
             // console.log('Scraped Pairs:', pairs);
             // Filter and log pairs with makers over 10000
             const highMakerPairs = pairs.filter(pair =>
-                pair.makers > 800 && // existing makers filter
+                pair.makers > 400 && // existing makers filter
                 pair.liquidity > 50000 && // minimum liquidity $100k
-                pair.volume > 80000 && // minimum 24h volume $50k
+                // pair.volume > 80000 && // minimum 24h volume $50k
                 //pair.priceChange.h24 > 0 && // positive 24h price change
                 // pair.buys > pair.sells &&
-                pair.pairAge < 360 &&
+                pair.pairAge < 60 &&
                 pair.priceChange.m5 > -65 &&
                 pair.priceChange.h1 > -65 &&
                 pair.priceChange.h6 > -65 &&

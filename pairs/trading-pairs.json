@@ -3193,5 +3193,26 @@
       "h6": 230,
       "h24": 230
     }
+  },
+  {
+    "timestamp": "2024-11-27T09:41:39.153Z",
+    "network": "solana",
+    "tokenAddress": "hbgcnmmkccsvtwgmyra9dne1suvfm6crnrtxctn2btay",
+    "token": "3 Shiro   SOL Shiro Neko",
+    "price": 0.049762,
+    "pairAge": 26,
+    "buys": 891,
+    "sells": 608,
+    "volume": 274000,
+    "makers": 820,
+    "liquidity": 151000,
+    "marketCap": 195000,
+    "priceChange": {
+      "m5": 9.87,
+      "h1": 67.06,
+      "h6": 67.06,
+      "h24": 67.06
+    },
+    "contractAddress": "6ren33JbZEW3Hm2genAga4eAVSzKkP3H5BiVemDPEDJ2"
   }
 ]
