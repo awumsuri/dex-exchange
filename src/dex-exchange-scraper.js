@@ -282,9 +282,10 @@ async function sendToTelegram(pair) {
         }
 
         const message = `
+        <a href="https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG">&#8205;</a>
+
 🔥 New Token Alert 🔥
 
-<a href="https://dexexchangestorage.blob.core.windows.net/images/a2984863-6d87-432d-9385-dbe1062f2569.JPG">&#8205;</a>
 
 Token: ${pair.token}
 Network: ${pair.network}
