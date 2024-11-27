@@ -31,7 +31,7 @@ if (os.platform() === 'linux') {
 dotenv.config();
 
 puppeteer.use(StealthPlugin());
-const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : '/root/chrome-cache/'
+const cacheLocation = os.platform() === 'darwin' ? '/Users/surimtui/dexexchange-scraper/cache-chrome/' : 'chrome-cache/'
 const executablePath = (() => {
     switch (os.platform()) {
         case 'darwin':
