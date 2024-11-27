@@ -262,7 +262,7 @@ async function scrapeDexScreener() {
                                 console.log(JSON.stringify(enrichedPair, null, 2));
                                 savePairToFile(enrichedPair)
                             } else {
-                                savePairToFile(pair)
+                                savePairToFile(enrichedPair)
                             }
                         }                        
 
