@@ -256,14 +256,15 @@ async function scrapeDexScreener() {
                         const contractAddresses = await scrapeTokenDetails(browser, pair);
 
                         for (const contractAddress of contractAddresses) {
-                            if (contractAddress.toLowerCase().includes('pump')) {
-                                const enrichedPair = { ...pair, contractAddress };
+                            const enrichedPair = { ...pair, contractAddress };
+
+                            if (contractAddress.toLowerCase().includes('pump')) {                              
                                 await sendToTelegram(enrichedPair);
                                 console.log(JSON.stringify(enrichedPair, null, 2));
                             }
                         }
 
-                        savePairToFile(pair)
+                        savePairToFile(enrichedPair)
 
                     } else {
                         console.log(`Token ${pair.token} already saved`);
