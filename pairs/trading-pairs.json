@@ -3173,5 +3173,25 @@
       "h24": 71.04
     },
     "contractAddress": "3NnEkZUaAgNrsSWmz5fUWmG7VNyxKExbj4Gp8ppYpump"
+  },
+  {
+    "timestamp": "2024-11-27T08:40:12.089Z",
+    "network": "solana",
+    "tokenAddress": "hx5z1lyze21ra8thy55liua3hq3mvejlnipdp4avj3at",
+    "token": "2 DWIB   SOL Damn  wish I bought",
+    "price": 0.0003076,
+    "pairAge": 11,
+    "buys": 1031,
+    "sells": 832,
+    "volume": 452000,
+    "makers": 982,
+    "liquidity": 70000,
+    "marketCap": 307000,
+    "priceChange": {
+      "m5": 128,
+      "h1": 230,
+      "h6": 230,
+      "h24": 230
+    }
   }
 ]

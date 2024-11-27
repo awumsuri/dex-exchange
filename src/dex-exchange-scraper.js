@@ -248,7 +248,7 @@ async function scrapeDexScreener() {
             );
 
             if (highMakerPairs.length > 0) {
-                console.log('\nFiltered pairs meeting criteria:');
+                console.log(`\nFiltered pairs meeting criteria: ${new Date()}`);
                 for (const pair of highMakerPairs) {
                     if (!await isTokenAlreadySaved(pair.tokenAddress)) {
                         // Open token in new page and get additional details
