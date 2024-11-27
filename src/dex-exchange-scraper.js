@@ -162,6 +162,45 @@ async function scrapeDexScreener() {
                     return parseFloat(cleanValue);
                 }
 
+                function convertToMinutes(timeString) {
+                    const regex = /(?:(\d+)h\s*)?(?:(\d+)m)?/; // Regex to extract hours and minutes
+                    const match = timeString.match(regex);
+                
+                    if (!match) {
+                        throw new Error(`Invalid time format: ${timeString}`);
+                    }
+                
+                    const hours = parseInt(match[1] || 0, 10); // Default to 0 if no hours
+                    const minutes = parseInt(match[2] || 0, 10); // Default to 0 if no minutes
+                
+                    return hours * 60 + minutes;
+                }
+
+                function parseTimeToMinutes(timeStr) {
+                    const parts = timeStr.split(' ');
+                    let totalMinutes = 0;
+                    
+                    for (let i = 0; i < parts.length; i += 2) {
+                        const value = parseInt(parts[i]);
+                        const unit = parts[i + 1];
+                        
+                        switch (unit) {
+                            case 'd':
+                                totalMinutes += value * 24 * 60;
+                                break;
+                            case 'h':
+                                totalMinutes += value * 60;
+                                break;
+                            case 'm':
+                                totalMinutes += value;
+                                break;
+                        }
+                    }
+                    return totalMinutes;
+                }
+
+                
+
                 const pairElements = document.querySelectorAll('.ds-dex-table-row.ds-dex-table-row-new');
                 return Array.from(pairElements).map(row => {
                     // Get token address from href
@@ -176,7 +215,7 @@ async function scrapeDexScreener() {
                             .replace(/[^a-zA-Z0-9]/g, ' ')  // Remove special characters
                             .trim(),  // Remove leading/trailing whitespace
                         price: parseFloat(row.querySelector('.ds-dex-table-row-col-price').innerText.replace('$', '').replace(',', '')),
-                        pairAge: row.querySelector('.ds-dex-table-row-col-pair-age').innerText,
+                        pairAge: convertToMinutes(row.querySelector('.ds-dex-table-row-col-pair-age').innerText),
                         buys: parseInt(row.querySelector('.ds-dex-table-row-col-buys').innerText.replace(',', '')),
                         sells: parseInt(row.querySelector('.ds-dex-table-row-col-sells').innerText.replace(',', '')),
                         volume: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-volume').innerText),
@@ -201,6 +240,10 @@ async function scrapeDexScreener() {
                 pair.volume > 80000 && // minimum 24h volume $50k
                 //pair.priceChange.h24 > 0 && // positive 24h price change
                 // pair.buys > pair.sells &&
+                pair.pairAge < 360 &&
+                pair.priceChange.m5 > -50 &&
+                pair.priceChange.h1 > -50 &&
+                pair.priceChange.h6 > -50 &&
                 pair.network === 'solana' // more buys than sells
             );
 
@@ -291,7 +334,7 @@ async function sendToTelegram(pair) {
 Token: ${pair.token}
 Network: ${pair.network}
 Price: $${pair.price}
-Age: ${pair.pairAge}
+Age: ${pair.pairAge} minutes
 
 📊 Stats:
 • Buys: ${pair.buys}
