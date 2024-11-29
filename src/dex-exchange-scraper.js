@@ -48,12 +48,7 @@ const stealthPlugin = StealthPlugin();
 stealthPlugin.enabledEvasions.delete('chrome.runtime')
 stealthPlugin.enabledEvasions.delete('iframe.contentWindow')
 
-
 puppeteer.use(stealthPlugin);
-
-
-
-
 
 async function scrapeDexScreener() {
     let browser;
@@ -92,8 +87,8 @@ async function scrapeDexScreener() {
                 // '--metrics-recording-only',
                 // '--mute-audio',
                 // '--no-sandbox',
-                '--start-maximized'              
-            ]         
+                '--start-maximized'
+            ]
         });
 
         // Move browser initialization inside this function
@@ -101,25 +96,6 @@ async function scrapeDexScreener() {
 
         // Load saved cookies if they exist
         await loadCookies(page);
-
-        // Set a more realistic user agent
-        // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
-
-        // // Add extra headers
-        // await page.setExtraHTTPHeaders({
-        //     'Accept-Language': 'en-US,en;q=0.9',
-        //     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-        //     'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
-        //     'sec-ch-ua-mobile': '?0',
-        //     'sec-ch-ua-platform': '"Windows"',
-        //     'Upgrade-Insecure-Requests': '1',
-        //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-        //     'Accept-Encoding': 'gzip, deflate, br',
-        //     'sec-fetch-dest': 'document',
-        //     'sec-fetch-mode': 'navigate',
-        //     'sec-fetch-site': 'none',
-        //     'sec-fetch-user': '?1',
-        // });
 
 
         // Initial page load
@@ -139,160 +115,157 @@ async function scrapeDexScreener() {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         while (true) {
-            const pairs = await page.evaluate(() => {
-
-                function parseNumberWithSuffix(value) {
-                    // Remove $ and commas, and trim whitespace
-                    let cleanValue = value.replace('$', '').replace(/,/g, '').trim();
-
-                    // Convert to uppercase for consistency
-                    cleanValue = cleanValue.toUpperCase();
-
-                    // Handle K (thousands)
-                    if (cleanValue.endsWith('K')) {
-                        return parseFloat(cleanValue.replace('K', '')) * 1000;
-                    }
-
-                    // Handle M (millions)
-                    if (cleanValue.endsWith('M')) {
-                        return parseFloat(cleanValue.replace('M', '')) * 1000000;
-                    }
-
-                    // If no suffix, just parse the float
-                    return parseFloat(cleanValue);
-                }
-
-                function convertToMinutes(timeString) {
-                    const regex = /(?:(\d+)h\s*)?(?:(\d+)m)?/; // Regex to extract hours and minutes
-                    const match = timeString.match(regex);
-                
-                    if (!match) {
-                        throw new Error(`Invalid time format: ${timeString}`);
-                    }
-                
-                    const hours = parseInt(match[1] || 0, 10); // Default to 0 if no hours
-                    const minutes = parseInt(match[2] || 0, 10); // Default to 0 if no minutes
-                
-                    return hours * 60 + minutes;
-                }
-
-                function parseTimeToMinutes(timeStr) {
-                    const parts = timeStr.split(' ');
-                    let totalMinutes = 0;
-                    
-                    for (let i = 0; i < parts.length; i += 2) {
-                        const value = parseInt(parts[i]);
-                        const unit = parts[i + 1];
-                        
-                        switch (unit) {
-                            case 'd':
-                                totalMinutes += value * 24 * 60;
-                                break;
-                            case 'h':
-                                totalMinutes += value * 60;
-                                break;
-                            case 'm':
-                                totalMinutes += value;
-                                break;
-                        }
-                    }
-                    return totalMinutes;
-                }
-
-                
-
-                const pairElements = document.querySelectorAll('.ds-dex-table-row.ds-dex-table-row-new');
-                return Array.from(pairElements).map(row => {
-                    // Get token address from href
-                    const tokenAddress = row.getAttribute('href').split('/').pop();
-                    // Get network name from href
-                    const network = row.getAttribute('href').split('/')[1];
-
-                    return {
-                        network,
-                        tokenAddress,
-                        token: row.querySelector('.ds-dex-table-row-col-token').innerText
-                            .replace(/[^a-zA-Z0-9]/g, ' ')  // Remove special characters
-                            .trim(),  // Remove leading/trailing whitespace
-                        price: parseFloat(row.querySelector('.ds-dex-table-row-col-price').innerText.replace('$', '').replace(',', '')),
-                        pairAge: convertToMinutes(row.querySelector('.ds-dex-table-row-col-pair-age').innerText),
-                        buys: parseInt(row.querySelector('.ds-dex-table-row-col-buys').innerText.replace(',', '')),
-                        sells: parseInt(row.querySelector('.ds-dex-table-row-col-sells').innerText.replace(',', '')),
-                        volume: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-volume').innerText),
-                        makers: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-makers').innerText),
-                        liquidity: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-liquidity').innerText),
-                        marketCap: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-market-cap').innerText),
-                        priceChange: {
-                            m5: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-m5').innerText.replace('%', '')),
-                            h1: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h1').innerText.replace('%', '')),
-                            h6: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h6').innerText.replace('%', '')),
-                            h24: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h24').innerText.replace('%', '')),
-                        },
-                    };
-                });
-            });
-
-            // console.log('Scraped Pairs:', pairs);
-            // Filter and log pairs with makers over 10000
-            const highMakerPairs = pairs.filter(pair =>
-                pair.makers > 400 && // existing makers filter
-                pair.liquidity > 50000 && // minimum liquidity $100k
-                // pair.volume > 80000 && // minimum 24h volume $50k
-                //pair.priceChange.h24 > 0 && // positive 24h price change
-                // pair.buys > pair.sells &&
-                pair.pairAge < 60 &&
-                pair.priceChange.m5 > -65 &&
-                pair.priceChange.h1 > -65 &&
-                pair.priceChange.h6 > -65 &&
-                pair.priceChange.h24 > -65 &&
-                pair.network === 'solana' // more buys than sells
-            );
-
-            if (highMakerPairs.length > 0) {
-                console.log(`\nFiltered pairs meeting criteria: ${new Date()}`);
-                for (const pair of highMakerPairs) {
-                    if (!await isTokenAlreadySaved(pair.tokenAddress)) {
-                        // Open token in new page and get additional details
-                        const contractAddresses = await scrapeTokenDetails(browser, pair);
-
-                        if (contractAddresses.length > 0) {
-                            for (const contractAddress of contractAddresses) {
-                                const enrichedPair = { ...pair, contractAddress };
-                                if (contractAddress.toLowerCase().includes('pump')) {                              
-                                    await sendToTelegram(enrichedPair);
-                                    console.log(JSON.stringify(enrichedPair, null, 2));                             
-                                }
-                                savePairToFile(enrichedPair)
-                            }  
-                        } else {
-                            savePairToFile(pair)
-                        }                      
-
-                    } else {
-                        console.log(`Token ${pair.token} already saved`);
-                    }
-                }
-                console.log('------------------------\n');
-            } else {
-                console.log(`No New Found Tokens == ${new Date()}`)
+            try {
+                await processPairs(page, browser);
+            } catch (error) {
+                console.error('Error Scraping Pairs in While Loop:', error);
             }
-            // Wait 5 seconds before next evaluation
-            // await saveCookies(page);
-
-            await new Promise(resolve => setTimeout(resolve, 5000));
         }
 
     } catch (error) {
         console.error('Scraping error:', error);
-        if (browser) {
-            await browser.close();
-        }
+        // if (browser) {
+        //     await browser.close();
+        // }
         // Restart the scraping process after a delay
-        console.log('Restarting scraper in 10 seconds...');
-        setTimeout(() => scrapeDexScreener(), 10000);
+        // console.log('Restarting scraper in 10 seconds...');
+        // setTimeout(() => scrapeDexScreener(), 5000);        
     }
 }
 
+async function processPairs(page, browser) {
+
+    const pairs = await page.evaluate(() => {
+        function parseNumberWithSuffix(value) {
+            // Remove $ and commas, and trim whitespace
+            let cleanValue = value.replace('$', '').replace(/,/g, '').trim();
+
+            // Convert to uppercase for consistency
+            cleanValue = cleanValue.toUpperCase();
+
+            // Handle K (thousands)
+            if (cleanValue.endsWith('K')) {
+                return parseFloat(cleanValue.replace('K', '')) * 1000;
+            }
+
+            // Handle M (millions)
+            if (cleanValue.endsWith('M')) {
+                return parseFloat(cleanValue.replace('M', '')) * 1000000;
+            }
+
+            // If no suffix, just parse the float
+            return parseFloat(cleanValue);
+        }
+
+        function convertToMinutes(timeString) {
+            const regex = /(?:(\d+)h\s*)?(?:(\d+)m)?/; // Regex to extract hours and minutes
+            const match = timeString.match(regex);
+
+            if (!match) {
+                throw new Error(`Invalid time format: ${timeString}`);
+            }
+
+            const hours = parseInt(match[1] || 0, 10); // Default to 0 if no hours
+            const minutes = parseInt(match[2] || 0, 10); // Default to 0 if no minutes
+
+            return hours * 60 + minutes;
+        }
+
+        function parseTimeToMinutes(timeStr) {
+            const parts = timeStr.split(' ');
+            let totalMinutes = 0;
+
+            for (let i = 0; i < parts.length; i += 2) {
+                const value = parseInt(parts[i]);
+                const unit = parts[i + 1];
+
+                switch (unit) {
+                    case 'd':
+                        totalMinutes += value * 24 * 60;
+                        break;
+                    case 'h':
+                        totalMinutes += value * 60;
+                        break;
+                    case 'm':
+                        totalMinutes += value;
+                        break;
+                }
+            }
+            return totalMinutes;
+        }
+
+
+
+        const pairElements = document.querySelectorAll('.ds-dex-table-row.ds-dex-table-row-new');
+        return Array.from(pairElements).map(row => {
+            // Get token address from href
+            const tokenAddress = row.getAttribute('href').split('/').pop();
+            // Get network name from href
+            const network = row.getAttribute('href').split('/')[1];
+
+            return {
+                network,
+                tokenAddress,
+                token: row.querySelector('.ds-dex-table-row-col-token').innerText
+                    .replace(/[^a-zA-Z0-9]/g, ' ')  // Remove special characters
+                    .trim(),  // Remove leading/trailing whitespace
+                price: parseFloat(row.querySelector('.ds-dex-table-row-col-price').innerText.replace('$', '').replace(',', '')),
+                pairAge: convertToMinutes(row.querySelector('.ds-dex-table-row-col-pair-age').innerText),
+                buys: parseInt(row.querySelector('.ds-dex-table-row-col-buys').innerText.replace(',', '')),
+                sells: parseInt(row.querySelector('.ds-dex-table-row-col-sells').innerText.replace(',', '')),
+                volume: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-volume').innerText),
+                makers: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-makers').innerText),
+                liquidity: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-liquidity').innerText),
+                marketCap: parseNumberWithSuffix(row.querySelector('.ds-dex-table-row-col-market-cap').innerText),
+                priceChange: {
+                    m5: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-m5').innerText.replace('%', '')),
+                    h1: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h1').innerText.replace('%', '')),
+                    h6: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h6').innerText.replace('%', '')),
+                    h24: parseFloat(row.querySelector('.ds-dex-table-row-col-price-change-h24').innerText.replace('%', '')),
+                },
+            };
+        });
+    });
+
+    const highMakerPairs = pairs.filter(pair =>
+        pair.makers > 400 && // existing makers filter
+        pair.liquidity > 50000 && // minimum liquidity $100k
+        pair.pairAge < 60 &&
+        pair.priceChange.m5 > -65 &&
+        pair.priceChange.h1 > -65 &&
+        pair.priceChange.h6 > -65 &&
+        pair.priceChange.h24 > -65 &&
+        pair.network === 'solana'
+    );
+
+    if (highMakerPairs.length > 0) {
+        console.log(`\nFiltered pairs meeting criteria: ${new Date()}`);
+        for (const pair of highMakerPairs) {
+            if (!await isTokenAlreadySaved(pair.tokenAddress)) {
+                const contractAddresses = await scrapeTokenDetails(browser, pair);
+
+                if (contractAddresses.length > 0) {
+                    for (const contractAddress of contractAddresses) {
+                        const enrichedPair = { ...pair, contractAddress };
+                        if (contractAddress.toLowerCase().includes('pump')) {
+                            await sendToTelegram(enrichedPair);
+                            console.log(JSON.stringify(enrichedPair, null, 2));
+                        }
+                        savePairToFile(enrichedPair);
+                    }
+                } else {
+                    savePairToFile(pair);
+                }
+            } else {
+                console.log(`Token ${pair.token} already saved`);
+            }
+        }
+        console.log('------------------------\n');
+    } else {
+        console.log(`No New Found Tokens == ${new Date()}`);
+    }
+    await new Promise(resolve => setTimeout(resolve, 5000));
+}
 
 async function isTokenAlreadySaved(tokenAddress) {
     try {
@@ -356,7 +329,7 @@ Age: ${pair.pairAge} minutes
 
 🔗 Contract: ${pair.contractAddress}
 
-url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
+[View on DexScreener](https://dexscreener.com/${pair.network}/${pair.tokenAddress})
 `;
 
         // const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
@@ -378,10 +351,10 @@ url: https://dexscreener.com/${pair.network}/${pair.tokenAddress}
 
         bot.sendPhoto(chatId, logoImage, {
             caption: message
-          })
-          .catch((err) => {
-            console.error('Error sending message:', err);
-          });
+        })
+            .catch((err) => {
+                console.error('Error sending message:', err);
+            });
 
         console.log('Message sent to Telegram successfully');
 
@@ -479,12 +452,12 @@ async function scrapeTokenDetails(browser, pair) {
 
         // Wait 3 seconds to allow dynamic content to load
         await new Promise(resolve => setTimeout(resolve, 3000));
-        
+
         // Scrape additional details
         const contractAddress = await tokenPage.evaluate((pairData) => {
             const chakraTexts = document.querySelectorAll('div span.chakra-text');
             const tokenElements = []
-          
+
             chakraTexts.forEach(element => {
                 const elementText = element.innerText.trim()
                 if (pairData.token.includes(elementText) && elementText.length > 0 && elementText !== 'SOL') {
@@ -495,7 +468,7 @@ async function scrapeTokenDetails(browser, pair) {
             const contractAddresses = tokenElements.map(element => element.getAttribute('title')).filter(Boolean);
             return contractAddresses.filter(addr => addr.length >= 32);
         }, pair);
-        
+
         await tokenPage.close();
         return contractAddress;
     } catch (error) {
