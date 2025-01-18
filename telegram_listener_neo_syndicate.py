@@ -6,8 +6,21 @@ import os
 from dotenv import load_dotenv
 import requests
 import datetime
+import logging
+from logging.handlers import RotatingFileHandler
+
 # Initialize dotenv
 load_dotenv()
+
+# Configure logging
+log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+log_file = 'telegram_bot.log'
+log_handler = RotatingFileHandler(log_file, maxBytes=1024*1024, backupCount=5)  # 1MB per file, keep 5 backup files
+log_handler.setFormatter(log_formatter)
+
+logger = logging.getLogger('TelegramBot')
+logger.setLevel(logging.INFO)
+logger.addHandler(log_handler)
 
 # Replace with your Bot Token
 BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
@@ -18,7 +31,7 @@ CHANNEL_ID = -1002378410637
 def handle_new_message(update, context):
     message = update.channel_post
     if message is not None:
-        print("New message in channel:", message.text)
+        logger.info(f"New message in channel: {message.text}")
         # Parse message text for token ticker or name
         text = message.text.lower()
         
@@ -29,7 +42,7 @@ def handle_new_message(update, context):
                 'solona': 'Solana',
                 'name': 'The Oracle'              
             }
-            print("Found $ORACLE token mention")
+            logger.info("Found $ORACLE token mention")
             send_to_telegram(token_info)
             
         # Look for "the oracle" token name
@@ -39,7 +52,7 @@ def handle_new_message(update, context):
                 'solona': 'Solana',
                 'name': 'The Oracle'              
             }
-            print("Found The Oracle token mention") 
+            logger.info("Found The Oracle token mention") 
             send_to_telegram(token_info)
 
 
@@ -50,6 +63,7 @@ def send_to_telegram(pair):
         chat_id = os.getenv('TELEGRAM_CHAT_ID')
         
         if not bot_token or not chat_id:
+            logger.error('Telegram bot token or chat ID not found in environment variables')
             raise ValueError('Telegram bot token or chat ID not found in environment variables')
         
         message = f"""
@@ -68,16 +82,17 @@ def send_to_telegram(pair):
         })
         
         response.raise_for_status()
-        print('Message sent to Telegram successfully')
+        logger.info('Message sent to Telegram successfully')
        
         
     except Exception as e:
-        print(f'Error sending to Telegram: {e}') 
+        logger.error(f'Error sending to Telegram: {str(e)}') 
         
         
 if __name__ == "__main__":
     # Initialize the Updater with your bot token
     updater = Updater(BOT_TOKEN, use_context=True)
+    logger.info("Bot initialized successfully")
 
     dispatcher = updater.dispatcher
 
@@ -91,7 +106,7 @@ if __name__ == "__main__":
 
     # Start polling for updates
     updater.start_polling()
-    print(f"Listening for new messages in channel {CHANNEL_ID}...")
+    logger.info(f"Listening for new messages in channel {CHANNEL_ID}...")
     
     # Run until Ctrl+C
     updater.idle()
