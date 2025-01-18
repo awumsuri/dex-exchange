@@ -128,7 +128,8 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=False,
-            executable_path=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+           # executable_path=r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+           # executable_path=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
             args=[
                 '--disable-gpu',
                 '--disable-dev-shm-usage',
@@ -143,7 +144,7 @@ def main():
         )
 
         try:
-            user_agent = str(parse('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'))
+            user_agent = str(parse('Mozilla/5.0 (Macintosh; Intel Mac OS X 13_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.165 Safari/537.36'))
             context = browser.new_context(
                 viewport={'width': 1920, 'height': 1080},
                 user_agent=user_agent,
