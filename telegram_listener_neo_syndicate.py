@@ -93,28 +93,6 @@ if __name__ == "__main__":
     updater.start_polling()
     print(f"Listening for new messages in channel {CHANNEL_ID}...")
     
-    # Send a test message to verify the bot is working
-    test_pair = {
-    'message_id': 12345,
-    'date': datetime.datetime(2025, 1, 18, 14, 30, 0),
-    'chat': {
-        'id': -1002378410637,
-        'title': 'Sample Channel',
-        'type': 'channel'
-    },
-    'text': '🚀 New token listing: XYZ Token\n\nDetails:\n- Symbol: XYZ\n- Launch Time: Jan 20, 2025, 10:00 UTC\n- Contract Address: 0x123abc456def...',
-    'entities': [
-        {'type': 'bold', 'offset': 0, 'length': 22},  # Formatting for 'New token listing: XYZ Token'
-        {'type': 'url', 'offset': 91, 'length': 42}   # Contract address as a link
-    ]
-}
-    
-    try:
-        print("Sending test message...")
-        handle_new_message(test_pair, {})
-    except Exception as e:
-        print(f"Error sending test message: {e}")
-
     # Run until Ctrl+C
     updater.idle()
 
