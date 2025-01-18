@@ -128,6 +128,7 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             headless=False,
+            executable_path=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
             args=[
                 '--disable-gpu',
                 '--disable-dev-shm-usage',
