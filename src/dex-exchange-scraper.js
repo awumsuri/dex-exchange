@@ -123,13 +123,7 @@ async function scrapeDexScreener() {
         }
 
     } catch (error) {
-        console.error('Scraping error:', error);
-        // if (browser) {
-        //     await browser.close();
-        // }
-        // Restart the scraping process after a delay
-        // console.log('Restarting scraper in 10 seconds...');
-        // setTimeout(() => scrapeDexScreener(), 5000);        
+        console.error('Scraping error:', error);                
     }
 }
 

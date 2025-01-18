@@ -3,6 +3,7 @@ import os
 import json
 import random
 import time
+import asyncio
 from dotenv import load_dotenv
 from user_agents import parse
 import requests
@@ -11,9 +12,9 @@ from pathlib import Path
 # Initialize dotenv
 load_dotenv()
 
-async def setup_page_stealth(page):
+def setup_page_stealth(page):
     # Add stealth scripts
-    await page.add_init_script("""
+    page.add_init_script("""
         () => {
             const originalQuery = window.navigator.permissions.query;
             window.navigator.permissions.query = (parameters) => (
@@ -261,4 +262,4 @@ def main():
             exit(1)
 
 if __name__ == '__main__':
-    main() 
+  main()
