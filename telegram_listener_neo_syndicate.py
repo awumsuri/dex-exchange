@@ -59,7 +59,7 @@ def send_to_telegram(pair):
             raise ValueError('Telegram bot token or chat ID not found in environment variables')
         
         message = f"""
-            🔥 Found ORACLE TOKEN 🔥
+            🔥 Found {pair['name']} TOKEN 🔥
 
             Token: {pair['token']}
             Network: {pair['solona']}
