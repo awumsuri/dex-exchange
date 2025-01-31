@@ -42,7 +42,8 @@ def handle_new_message(update, context):
             token_info = {
                 'token': '$REDDCOIN' if is_redd else '$REDCOIN',
                 'solona': 'Solana',
-                'name': 'Redd Coin' if is_redd else 'Red Coin'              
+                'name': 'Redd Coin' if is_redd else 'Red Coin',
+                'message': text
             }
             logger.info(f"Found {'Redd' if is_redd else 'Red'} Coin token mention") 
             send_to_telegram(token_info)
@@ -64,6 +65,7 @@ def send_to_telegram(pair):
             Token: {pair['token']}
             Network: {pair['solona']}
             Name: {pair['name']}
+            Message: {pair['message']}
         """
 
         url = f'https://api.telegram.org/bot{bot_token}/sendMessage'
