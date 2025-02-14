@@ -35,15 +35,15 @@ def handle_new_message(update, context):
         # Parse message text for token ticker or name
         text = message.text.lower()
         
-        # Look for Argentina token mentions
-        if 'argentina' in text.lower():
+        # Look for $ARGENTINA token mentions (case sensitive)
+        if '$ARGENTINA' in text:
             token_info = {
                 'token': '$ARGENTINA',
-                'solona': 'Solana',
+                'solana': 'Solana',
                 'name': 'Argentina',
                 'message': text
             }
-            logger.info(f"Found Argentina token mention")
+            logger.info(f"Found $ARGENTINA token mention")
             send_to_telegram(token_info)
 
 
@@ -61,7 +61,7 @@ def send_to_telegram(pair):
             🔥 Found {pair['name']} TOKEN 🔥
 
             Token: {pair['token']}
-            Network: {pair['solona']}
+            Network: {pair['solana']}
             Name: {pair['name']}
             Message: {pair['message']}
         """
