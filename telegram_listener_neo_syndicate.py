@@ -35,17 +35,15 @@ def handle_new_message(update, context):
         # Parse message text for token ticker or name
         text = message.text.lower()
         
-        # Look for Red Coin variations
-        if any(variant in text.replace(' ', '') for variant in ['redcoin', 'reddcoin', 'red coin', 'redd coin']):
-            # Check if it's the double 'd' variant
-            is_redd = any(variant in text.replace(' ', '') for variant in ['reddcoin', 'redd coin'])
+        # Look for Argentina token mentions
+        if 'argentina' in text.lower():
             token_info = {
-                'token': '$REDDCOIN' if is_redd else '$REDCOIN',
+                'token': '$ARGENTINA',
                 'solona': 'Solana',
-                'name': 'Redd Coin' if is_redd else 'Red Coin',
+                'name': 'Argentina',
                 'message': text
             }
-            logger.info(f"Found {'Redd' if is_redd else 'Red'} Coin token mention") 
+            logger.info(f"Found Argentina token mention")
             send_to_telegram(token_info)
 
 

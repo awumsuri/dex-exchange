@@ -1,4 +1,6 @@
 from playwright.sync_api import sync_playwright
+from playwright_stealth import stealth_sync
+
 import os
 import json
 import random
@@ -126,49 +128,27 @@ def save_pair_to_file(pair):
 
 def main():
     with sync_playwright() as p:
-        browser = p.chromium.launch(
+        user_profile = "/Users/surimtui/Library/Application Support/Google/Chrome/Profile 4"
+        browser_context = p.chromium.launch_persistent_context(
             headless=False,
-           # executable_path=r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-           # executable_path=r"C:\Program Files\Google\Chrome\Application\chrome.exe",
-            args=[
-                '--disable-gpu',
-                '--disable-dev-shm-usage',
-                '--disable-setuid-sandbox',
-                '--no-sandbox',
-                '--disable-blink-features=AutomationControlled',
-                '--disable-features=IsolateOrigins,site-per-process',
-                '--disable-site-isolation-trials',
-                '--disable-web-security',
-                # ... (other args remain the same)
-            ]
+            executable_path=r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            user_data_dir=user_profile,
+            viewport={'width': 1920, 'height': 1080},
+            # user_agent=str(parse('Mozilla/5.0 (Macintosh; Intel Mac OS X 13_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.165 Safari/537.36')),
+            # locale='en-US',
         )
 
         try:
-            user_agent = str(parse('Mozilla/5.0 (Macintosh; Intel Mac OS X 13_2_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.165 Safari/537.36'))
-            context = browser.new_context(
-                viewport={'width': 1920, 'height': 1080},
-                user_agent=user_agent,
-                locale='en-US',
-                timezone_id='America/New_York',
-                geolocation={'latitude': 40.712776, 'longitude': -74.005974},
-                permissions=['geolocation'],
-                extra_http_headers={
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Sec-Ch-Ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
-                    'Sec-Ch-Ua-Mobile': '?0',
-                    'Sec-Ch-Ua-Platform': '"Windows"',
-                    'User-Agent': user_agent,
-                }
-            )
+            # Create page directly from browser_context, no need for new_context()
+            page = browser_context.new_page()
+            stealth_sync(page)
 
-            page = context.new_page()
-            setup_page_stealth(page)
+            # setup_page_stealth(page)
 
             while True:
                 try:
                     print('Loading page...')
-                    page.goto('https://dexscreener.com/?rankBy=pairAge&order=asc&minLiq=50000&min24HVol=80000&profile=1', 
+                    page.goto('https://dexscreener.com/?rankBy=pairAge', 
                              wait_until='networkidle', timeout=60000)
                     
                     print('Waiting for initial load...')
@@ -233,10 +213,8 @@ def main():
 
                     # Filter pairs based on criteria
                     high_maker_pairs = [
-                        pair for pair in pairs 
-                        if pair['makers'] > 8 
-                        and pair['liquidity'] > 5 
-                        and pair['volume'] > 8 
+                        pair for pair in pairs                       
+                        if (pair['token'] == '$TIND' or pair['token'] == '$TINDER')                       
                         and pair['network'] == 'solana'
                     ]
 
@@ -260,8 +238,22 @@ def main():
 
         except Exception as e:
             print(f'Fatal error: {e}')
-            browser.close()
+            browser_context.close()
             exit(1)
+
+
+def main2():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        context = browser.new_context(
+            viewport={'width': 1920, 'height': 1080}
+        )
+        page = context.new_page()
+        stealth_sync(page)
+        page.goto("https://dexscreener.com/?rankBy=pairAge", wait_until="networkidle", timeout=60000)
+        print("Page loaded with stealth measures")
+        input("Press Enter to close browser...")
+        browser.close()
 
 if __name__ == '__main__':
   main()
