@@ -78,7 +78,7 @@ def main():
         
         # Keep the browser open for observation
         time.sleep(20)
-        context.close()
+        # context.close()
 
 if __name__ == '__main__':
     main()
