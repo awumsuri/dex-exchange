@@ -35,15 +35,15 @@ def handle_new_message(update, context):
         # Parse message text for token ticker or name
         text = message.text.lower()
         
-        # Look for $ARGENTINA token mentions (case sensitive)
-        if '$ARGENTINA' in text:
+        # Look for $$$$4U token mentions (case sensitive)
+        if '$$$4U' in text:
             token_info = {
-                'token': '$ARGENTINA',
+                'token': '$$$4U',
                 'solana': 'Solana',
-                'name': 'Argentina',
+                'name': '$$$4U',
                 'message': text
             }
-            logger.info(f"Found $ARGENTINA token mention")
+            logger.info(f"Found $$$$4U token mention")
             send_to_telegram(token_info)
 
 
